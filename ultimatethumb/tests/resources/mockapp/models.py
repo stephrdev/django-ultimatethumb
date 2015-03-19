@@ -1,5 +1,5 @@
 from django.db import models
 
 
-class MockModel(models.Model):
-    pass
+class ImageModel(models.Model):
+    file = models.ImageField(upload_to='mockapp/imagemodels/')

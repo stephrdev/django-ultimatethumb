@@ -20,11 +20,18 @@ INSTALLED_APPS = (
 
 MIDDLEWARE_CLASSES = []
 
+ROOT_URLCONF = 'ultimatethumb.urls'
+
 MEDIA_ROOT = tempfile.mkdtemp()
 MEDIA_URL = '/media/'
 
-STATIC_ROOT = os.path.join(os.path.dirname(__file__), 'resources', 'static'),
+STATICFILES_DIRS = [
+    os.path.join(os.path.dirname(__file__), 'resources', 'static'),
+]
 STATIC_URL = '/static/'
+
+ULTIMATETHUMB_ROOT = tempfile.mkdtemp()
+ULTIMATETHUMB_URL = '/'
 
 TEMPLATE_DIRS = (
     os.path.join(os.path.dirname(__file__), 'resources', 'templates'),
