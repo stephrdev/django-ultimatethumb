@@ -1,0 +1,10 @@
+include README.rst
+include CHANGELOG.rst
+include LICENSE.rst
+include setup.cfg
+
+recursive-include ultimatethumb *.py
+
+recursive-exclude ultimatethumb/tests *
+recursive-exclude * *.pyc
+recursive-exclude * *.pyo

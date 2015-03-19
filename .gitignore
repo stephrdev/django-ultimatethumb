@@ -1,0 +1,11 @@
+*.egg
+*.pyc
+/build
+/docs/_build
+/dist
+/.tox
+/ultimatethumb.egg-info
+/junit-*.xml
+coverage.xml
+.coverage
+.cache
