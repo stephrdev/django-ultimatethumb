@@ -6,7 +6,8 @@ from ultimatethumb.storage import ThumbnailFileSystemStorage, thumbnail_storage
 
 
 def test_lazy_thumbnail_storage():
-    assert isinstance(thumbnail_storage, ThumbnailFileSystemStorage) is True
+    # Thumbnail storage is a LazyObject, theirfore we have to check on _wrapped.
+    assert isinstance(thumbnail_storage._wrapped, ThumbnailFileSystemStorage) is True
 
 
 class TestThumbnailFileSystemStorage:

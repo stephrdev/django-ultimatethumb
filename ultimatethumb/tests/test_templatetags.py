@@ -25,7 +25,7 @@ class TestUltimatethumbTags:
         template = Template((
             '{%% load ultimatethumb_tags %%}'
             '{%% ultimatethumb "img" "%s" sizes="100x0" %%}'
-        ) % 'static:robots.txt')
+        ) % 'static:test.txt')
 
         context = Context()
         template.render(context)

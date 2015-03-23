@@ -17,7 +17,10 @@ Size = namedtuple('Size', ('width', 'height'))
 class Thumbnail(object):
     def __init__(self, source, opts):
         self.source = source
-        self.options = opts
+
+        assert 'size' in opts
+        self.options = {'crop': False, 'upscale': False}
+        self.options.update(opts)
 
     def __repr__(self):
         return '<Thumbnail: {0} {1}>'.format(
@@ -34,7 +37,7 @@ class Thumbnail(object):
 
     @property
     def size(self):
-        return self.get_size()
+        return self.get_estimated_size()
 
     @property
     def url(self):
@@ -63,6 +66,53 @@ class Thumbnail(object):
     def get_size(self, factor=1):
         return Size(*get_size_for_path(self.get_storage_path(factor)))
 
+    def get_estimated_size(self):
+        source_size = get_size_for_path(self.source)
+        thumb_size = (self.options['size'][0], self.options['size'][1])
+        source_width, source_height = source_size
+
+        thumb_width, thumb_height = thumb_size
+        if type(thumb_width) is not int:
+            if thumb_width[-1] == '%':
+                thumb_width = source_width * int(thumb_width[:-1]) / 100.0
+            else:
+                thumb_width = int(thumb_width)
+
+        if type(thumb_height) is not int:
+            if thumb_height[-1] == '%':
+                thumb_height = source_height * int(thumb_height[:-1]) / 100.0
+            else:
+                thumb_height = int(thumb_height)
+
+        # From now one, we calculate with float.
+        thumb_width = float(thumb_width)
+        thumb_height = float(thumb_height)
+
+        if not thumb_width:
+            thumb_width = thumb_height * source_width / source_height
+
+        if not thumb_height:
+            thumb_height = thumb_width * source_height / source_width
+
+        width_scale = thumb_width / source_size[0]
+        height_scale = thumb_height / source_size[1]
+
+        if self.options['crop']:
+            if not self.options['upscale']:
+                thumb_ratio = max(width_scale, height_scale, 1)
+                thumb_width = thumb_width / thumb_ratio
+                thumb_height = thumb_height / thumb_ratio
+
+        else:
+            thumb_ratio = min(width_scale, height_scale)
+            if not self.options['upscale']:
+                thumb_ratio = min(thumb_ratio, 1)
+
+            thumb_width = source_width * thumb_ratio
+            thumb_height = source_height * thumb_ratio
+
+        return Size(int(round(thumb_width)), int(round(thumb_height)))
+
     def get_storage_name(self, factor=1):
         name = self.get_name()
         if factor != 1:
@@ -90,17 +140,29 @@ class Thumbnail(object):
         # Remove any icc profiles to avoid problems.
         gm_options['+profile'] = '"*"'
 
+        size = self.get_estimated_size()
+
+        resize_attrs = ''
+        if self.options['upscale']:
+            if self.options['crop']:
+                resize_attrs = '^'
+        else:
+            if self.options['crop']:
+                resize_attrs = '^'
+            else:
+                resize_attrs = '>'
+
         gm_options['resize'] = '{0}x{1}{2}'.format(
-            factor_size(self.options['size'][0], factor),
-            factor_size(self.options['size'][1], factor),
-            '' if self.options.get('upscale', False) else '>'
+            factor_size(size[0], factor),
+            factor_size(size[1], factor),
+            resize_attrs
         )
 
-        if self.options.get('crop', False):
+        if self.options['crop']:
             gm_options['gravity'] = 'Center'
-            gm_options['crop'] = '{0}x{1}'.format(
-                factor_size(self.options['size'][0], factor),
-                factor_size(self.options['size'][1], factor)
+            gm_options['crop'] = '{0}x{1}+0+0'.format(
+                factor_size(size[0], factor),
+                factor_size(size[1], factor)
             )
 
         if 'quality' in self.options:
