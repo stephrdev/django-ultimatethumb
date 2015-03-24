@@ -17,7 +17,9 @@ class Thumbnail(object):
     def __init__(self, source, opts):
         self.source = source
 
-        assert 'size' in opts
+        if 'size' not in opts:
+            raise ValueError('`size` is required but missing in thumbnail options')
+
         self.options = {'crop': False, 'upscale': False}
         self.options.update(opts)
 

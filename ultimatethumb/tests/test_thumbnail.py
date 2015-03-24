@@ -19,6 +19,12 @@ class TestThumbnail:
         assert repr(thumbnail) == (
             "<Thumbnail: test.jpg crop=False size=['100', '100'] upscale=False>")
 
+    def test_invalid_opts(self):
+        with pytest.raises(ValueError) as exc:
+            Thumbnail('test.jpg', {})
+
+        assert '`size` is required' in str(exc.value)
+
     def test_get_name(self):
         thumbnail = Thumbnail('test.jpg', {'size': ['100', '100']})
         assert thumbnail.get_name() == '48382ea502faf93772a5b07f7d8a590f01d0f15b/test.jpg'
