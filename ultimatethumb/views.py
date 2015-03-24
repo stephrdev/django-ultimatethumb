@@ -13,9 +13,7 @@ from .thumbnail import Thumbnail
 class ThumbnailView(View):
 
     def get(self, *args, **kwargs):
-        self.thumbnail = self.get_thumbnail()
-        self.factor = self.get_factor()
-        return self.render_thumbnail()
+        return self.render_thumbnail(self.get_thumbnail(), self.get_factor())
 
     def get_thumbnail(self):
         try:
@@ -26,8 +24,8 @@ class ThumbnailView(View):
     def get_factor(self):
         return int(self.kwargs.get('factor', '1'))
 
-    def render_thumbnail(self):
-        path = self.thumbnail.get_storage_path(self.factor)
+    def render_thumbnail(self, thumbnail, factor):
+        path = thumbnail.get_storage_path(factor)
 
         thumbnail_stat = os.stat(path)
         mimetype, encoding = guess_type(path)
@@ -45,7 +43,7 @@ class ThumbnailView(View):
 
         if getattr(settings, 'ULTIMATETHUMB_USE_X_ACCEL_REDIRECT', not settings.DEBUG):
             response = HttpResponse(content_type=mimetype)
-            response['X-Accel-Redirect'] = self.thumbnail.get_storage_url(self.factor)
+            response['X-Accel-Redirect'] = thumbnail.get_storage_url(factor)
         else:
             with open(path, 'rb') as file:
                 response = HttpResponse(file.read(), content_type=mimetype)
