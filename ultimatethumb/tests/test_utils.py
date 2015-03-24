@@ -14,6 +14,9 @@ class TestGetThumbName:
     def setup(self):
         cache.clear()
 
+    def teardown(self):
+        cache.clear()
+
     def test_call(self):
         assert get_thumb_name('test.jpg', arg1=1, arg2=2) == (
             '207736f753aeca1bdbc5ebd4d2e265d45194fc28/test.jpg')

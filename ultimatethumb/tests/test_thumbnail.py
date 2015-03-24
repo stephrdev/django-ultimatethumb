@@ -14,6 +14,9 @@ class TestThumbnail:
     def setup(self):
         cache.clear()
 
+    def teardown(self):
+        cache.clear()
+
     def test_repr(self):
         thumbnail = Thumbnail('test.jpg', {'size': ['100', '100'], 'upscale': False})
         assert repr(thumbnail) == (
