@@ -19,7 +19,7 @@ class TestThumbnailView:
         assert 'Last-Modified' in response
         assert 'Content-Length' in response
         assert 'Content-Disposition' not in response
-        assert 'x-accel-redirect' not in response._headers
+        assert 'X-Accel-Redirect' not in response
 
     def test_get_invalid(self, client):
         response = client.get(reverse('thumbnail', kwargs={
