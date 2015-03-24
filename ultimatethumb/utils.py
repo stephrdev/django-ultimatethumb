@@ -5,6 +5,7 @@ import re
 
 from django.core.cache import cache
 from django.utils.datastructures import SortedDict
+from django.utils.encoding import force_bytes
 from PIL import Image as PILImage
 
 
@@ -23,7 +24,7 @@ def get_thumb_name(source, **options):
     data['opts'].keyOrder = sorted(data['opts'].keyOrder)
 
     serialized_data = json.dumps(data)
-    hashed_data = hashlib.sha1(serialized_data.encode('utf-8')).hexdigest()
+    hashed_data = hashlib.sha1(force_bytes(serialized_data)).hexdigest()
 
     thumb_name = '{0}/{1}{2}'.format(hashed_data, source_name, source_ext)
 
