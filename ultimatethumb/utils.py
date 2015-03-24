@@ -13,6 +13,9 @@ SIZE_RE = re.compile(r'(?:(\d+%?)x(\d+%?))')
 
 
 def get_cache_key(key):
+    """
+    Generates a prefixed cache-key for ultimatethumb.
+    """
     return 'ultimatethumb:{0}'.format(key)
 
 
@@ -73,5 +76,9 @@ def factor_size(value, factor):
 
 
 def get_size_for_path(path):
+    """
+    Gets the image size for a given path. If the path does not exist, the call
+    will fail loud with e.g. OSError exception.
+    """
     image = PILImage.open(path)
     return image.size

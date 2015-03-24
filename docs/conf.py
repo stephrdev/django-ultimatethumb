@@ -13,26 +13,26 @@ extensions = [
 templates_path = ['_templates']
 source_suffix = '.rst'
 master_doc = 'index'
-project = 'ultimatethumb'
-copyright = '2014, Moccu GmbH & Co. KG'
+project = 'django-ultimatethumb'
+copyright = '2015, Moccu GmbH & Co. KG'
 version = '0.1.0'
 release = '0.1.0'
 exclude_patterns = ['_build']
 pygments_style = 'sphinx'
-html_theme = 'default'
+html_theme = 'classic'
 # html_static_path = ['_static']
 htmlhelp_basename = 'ultimatethumbdoc'
 latex_documents = [(
-    'index', 'ultimatethumb.tex', 'ultimatethumb Documentation',
+    'index', 'ultimatethumb.tex', 'django-ultimatethumb Documentation',
     'Moccu GmbH & Co. KG', 'manual'
 )]
 man_pages = [(
-    'index', 'ultimatethumb', 'ultimatethumb Documentation',
+    'index', 'ultimatethumb', 'django-ultimatethumb Documentation',
     ['Moccu GmbH & Co. KG'], 1
 )]
 texinfo_documents = [(
-    'index', 'ultimatethumb', 'ultimatethumb Documentation',
-    'Moccu GmbH & Co. KG', 'ultimatethumb', 'Generate thumbnails of anything.',
+    'index', 'ultimatethumb', 'django-ultimatethumb Documentation',
+    'Moccu GmbH & Co. KG', 'django-ultimatethumb', 'Generate thumbnails of anything.',
     'Miscellaneous'
 )]
 intersphinx_mapping = {'http://docs.python.org/': None}
