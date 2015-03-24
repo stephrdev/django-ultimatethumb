@@ -83,7 +83,7 @@ class Thumbnail(object):
             else:
                 thumb_height = int(thumb_height)
 
-        # From now one, we calculate with float.
+        # From now on, we calculate with float.
         thumb_width = float(thumb_width)
         thumb_height = float(thumb_height)
 
