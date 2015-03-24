@@ -18,6 +18,7 @@ tests_require = [
     'pytest-cov',
     'pytest-pep8',
     'pytest-flakes',
+    'pytest-isort',
     'pytest-django',
     'python-coveralls',
     'factory-boy',
