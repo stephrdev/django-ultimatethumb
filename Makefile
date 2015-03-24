@@ -1,4 +1,4 @@
-.PHONY: tests coverage coverage-html devinstall tox docs clean
+.PHONY: tests coverage coverage-html devinstall docs clean
 APP=.
 COV=ultimatethumb
 OPTS=

@@ -30,7 +30,7 @@ tests_require = [
 setup(
     name='django-ultimatethumb',
     description='Generate thumbnails of anything.',
-    long_description=read('README.rst') + u'\n\n' + read('CHANGELOG.rst'),
+    long_description=read('README.rst'),
     version='0.1.0',
     license='BSD',
     author='Moccu GmbH & Co. KG',
@@ -41,7 +41,7 @@ setup(
     tests_require=tests_require,
     install_requires=[
         'Django>=1.6,<1.8',
-        'barbeque>=0.2.1'
+        'barbeque>=0.2.1,<0.3.0'
     ],
     extras_require={
         'tests': tests_require,
