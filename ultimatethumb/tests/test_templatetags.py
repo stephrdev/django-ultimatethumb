@@ -1,6 +1,6 @@
 import os
-import pytest
 
+import pytest
 from django.template import Context, Template
 
 from ultimatethumb.tests.factories.mockapp import ImageModelFactory

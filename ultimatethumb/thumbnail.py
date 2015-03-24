@@ -7,8 +7,7 @@ from django.core.urlresolvers import reverse
 from django.utils.datastructures import SortedDict
 
 from .storage import thumbnail_storage
-from .utils import (
-    get_thumb_data, get_thumb_name, factor_size, get_size_for_path)
+from .utils import factor_size, get_size_for_path, get_thumb_data, get_thumb_name
 
 
 Size = namedtuple('Size', ('width', 'height'))

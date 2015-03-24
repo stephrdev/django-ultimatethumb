@@ -1,5 +1,4 @@
 import pytest
-
 from django.core.exceptions import ImproperlyConfigured
 
 from ultimatethumb.storage import ThumbnailFileSystemStorage, thumbnail_storage

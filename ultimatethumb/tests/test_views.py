@@ -1,9 +1,8 @@
 import pytest
 from django.core.urlresolvers import reverse
 
-from ultimatethumb.thumbnail import Thumbnail
-
 from ultimatethumb.tests.factories.mockapp import ImageModelFactory
+from ultimatethumb.thumbnail import Thumbnail
 
 
 @pytest.mark.django_db

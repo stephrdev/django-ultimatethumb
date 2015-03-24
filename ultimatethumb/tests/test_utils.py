@@ -3,7 +3,7 @@ import pytest
 from django.core.cache import cache
 
 from ultimatethumb.utils import (
-    get_cache_key, get_thumb_name, get_thumb_data, parse_sizes, factor_size)
+    factor_size, get_cache_key, get_thumb_data, get_thumb_name, parse_sizes)
 
 
 def test_get_cache_key():

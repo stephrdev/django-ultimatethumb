@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import os
 import codecs
-from setuptools import setup, find_packages
+import os
+
+from setuptools import find_packages, setup
 
 
 def read(*parts):

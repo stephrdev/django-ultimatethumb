@@ -4,10 +4,9 @@ import mock
 import pytest
 from django.core.cache import cache
 
-from ultimatethumb.thumbnail import Thumbnail, Size
 from ultimatethumb.storage import thumbnail_storage
-
 from ultimatethumb.tests.factories.mockapp import ImageModelFactory
+from ultimatethumb.thumbnail import Size, Thumbnail
 
 
 @pytest.mark.django_db

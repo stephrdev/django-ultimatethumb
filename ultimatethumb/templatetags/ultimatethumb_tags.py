@@ -7,7 +7,7 @@ from django.core.files.storage import default_storage
 from django.template import Library
 
 from ..thumbnail import Thumbnail
-from ..utils import parse_sizes, get_size_for_path
+from ..utils import get_size_for_path, parse_sizes
 
 
 VALID_IMAGE_FILE_EXTENSIONS = ('jpg', 'jpeg', 'png', 'gif', 'ico')
