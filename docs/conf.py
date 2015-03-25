@@ -25,15 +25,15 @@ html_theme = 'default'
 htmlhelp_basename = 'ultimatethumbdoc'
 latex_documents = [(
     'index', 'ultimatethumb.tex', 'django-ultimatethumb Documentation',
-    'Moccu GmbH & Co. KG', 'manual'
+    'Moccu GmbH Co. KG', 'manual'
 )]
 man_pages = [(
     'index', 'ultimatethumb', 'django-ultimatethumb Documentation',
-    ['Moccu GmbH & Co. KG'], 1
+    ['Moccu GmbH Co. KG'], 1
 )]
 texinfo_documents = [(
     'index', 'ultimatethumb', 'django-ultimatethumb Documentation',
-    'Moccu GmbH & Co. KG', 'django-ultimatethumb', 'Generate thumbnails of anything.',
+    'Moccu GmbH Co. KG', 'django-ultimatethumb', 'Generate thumbnails of anything.',
     'Miscellaneous'
 )]
 intersphinx_mapping = {'http://docs.python.org/': None}
