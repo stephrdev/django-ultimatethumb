@@ -35,7 +35,12 @@ setup(
     author='Moccu GmbH & Co. KG',
     author_email='info@moccu.com',
     url='http://github.com/moccu/django-ultimatethumb/',
-    packages=find_packages(exclude=['ultimatethumb.tests']),
+    packages=find_packages(exclude=[
+        'ultimatethumb.tests',
+        'ultimatethumb.tests.factories',
+        'ultimatethumb.tests.resources',
+        'ultimatethumb.tests.resources.mockapp',
+    ]),
     test_suite='.',
     tests_require=tests_require,
     install_requires=[
