@@ -3,8 +3,6 @@
 import os
 
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ultimatethumb.tests.settings')
-
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
@@ -36,3 +34,12 @@ texinfo_documents = [(
     'Miscellaneous'
 )]
 intersphinx_mapping = {'http://docs.python.org/': None}
+
+# Ugly hack to provide some sane Django settings for autodoc.
+os.environ.setdefault(
+    'DJANGO_SETTINGS_MODULE',
+    'django.conf.project_template.project_name.settings'
+)
+from django.conf import settings
+settings.ULTIMATETHUMB_ROOT = '/docs/'
+settings.ULTIMATETHUMB_URL = '/docs/'

@@ -10,6 +10,9 @@ django-ultimatethumb
 .. image:: https://coveralls.io/repos/moccu/django-ultimatethumb/badge.svg
     :target: https://coveralls.io/r/moccu/django-ultimatethumb
 
+.. image:: https://readthedocs.org/projects/django-ultimatethumb/badge/?version=latest
+    :target: https://readthedocs.org/projects/django-ultimatethumb/?badge=latest
+
 
 What is django-ultimatethumb
 ----------------------------
