@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import os
+import os, sys
 
+
+sys.path.append(os.path.abspath('.'))
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_settings')
 
 extensions = [
     'sphinx.ext.autodoc',
@@ -34,12 +37,3 @@ texinfo_documents = [(
     'Miscellaneous'
 )]
 intersphinx_mapping = {'http://docs.python.org/': None}
-
-# Ugly hack to provide some sane Django settings for autodoc.
-os.environ.setdefault(
-    'DJANGO_SETTINGS_MODULE',
-    'django.conf.project_template.project_name.settings'
-)
-from django.conf import settings
-settings.ULTIMATETHUMB_ROOT = '/docs/'
-settings.ULTIMATETHUMB_URL = '/docs/'
