@@ -3,9 +3,12 @@ import json
 import os
 import re
 
+from django.conf import settings
 from django.core.cache import cache
+from django.core.urlresolvers import reverse
 from django.utils.datastructures import SortedDict
 from django.utils.encoding import force_bytes
+from django.utils.six.moves.urllib import parse as urlparse
 from PIL import Image as PILImage
 
 
@@ -82,3 +85,25 @@ def get_size_for_path(path):
     """
     image = PILImage.open(path)
     return image.size
+
+
+def get_domain_url(url):
+    domain = getattr(settings, 'ULTIMATETHUMB_DOMAIN', '')
+
+    if domain:
+        parsed_domain = urlparse.urlparse(domain)
+        # If the domain has no scheme, prepend slashes to make sure the url is
+        # correctly joined.
+        if not parsed_domain.netloc and parsed_domain.path:
+            domain = '//{0}'.format(domain)
+
+    return urlparse.urljoin(domain, url)
+
+
+def build_url(name, factor=1):
+    if factor > 1:
+        url = reverse('thumbnail-factor', kwargs={'factor': factor, 'name': name})
+    else:
+        url = reverse('thumbnail', kwargs={'name': name})
+
+    return get_domain_url(url)

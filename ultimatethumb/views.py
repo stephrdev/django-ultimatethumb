@@ -4,6 +4,7 @@ from mimetypes import guess_type
 from django.conf import settings
 from django.http import Http404, HttpResponse, HttpResponseNotModified
 from django.utils.http import http_date
+from django.utils.six.moves.urllib.parse import urlparse
 from django.views.generic import View
 from django.views.static import was_modified_since
 
@@ -43,7 +44,7 @@ class ThumbnailView(View):
 
         if getattr(settings, 'ULTIMATETHUMB_USE_X_ACCEL_REDIRECT', not settings.DEBUG):
             response = HttpResponse(content_type=mimetype)
-            response['X-Accel-Redirect'] = thumbnail.get_storage_url(factor)
+            response['X-Accel-Redirect'] = urlparse(thumbnail.get_storage_url(factor)).path
         else:
             with open(path, 'rb') as file:
                 response = HttpResponse(file.read(), content_type=mimetype)

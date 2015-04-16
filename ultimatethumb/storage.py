@@ -3,6 +3,8 @@ from django.core.exceptions import ImproperlyConfigured
 from django.core.files.storage import FileSystemStorage, get_storage_class
 from django.utils.functional import LazyObject
 
+from .utils import get_domain_url
+
 
 class ThumbnailFileSystemStorage(FileSystemStorage):
 
@@ -19,7 +21,7 @@ class ThumbnailFileSystemStorage(FileSystemStorage):
             raise ImproperlyConfigured('ULTIMATETHUMB_URL not set.')
 
         super(ThumbnailFileSystemStorage, self).__init__(
-            location, base_url, *args, **kwargs)
+            location, get_domain_url(base_url), *args, **kwargs)
 
 
 class ThumbnailStorage(LazyObject):

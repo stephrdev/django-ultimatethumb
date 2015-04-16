@@ -1,6 +1,7 @@
 import pytest
 from django.core.urlresolvers import reverse
 
+from ultimatethumb.storage import thumbnail_storage
 from ultimatethumb.tests.factories.mockapp import ImageModelFactory
 from ultimatethumb.thumbnail import Thumbnail
 
@@ -33,6 +34,20 @@ class TestThumbnailView:
 
         assert response.status_code == 200
         assert response['X-Accel-Redirect'] == self.thumbnail.get_storage_url()
+
+    def test_get_x_accel_redirect_with_domain(self, client, settings):
+        settings.ULTIMATETHUMB_USE_X_ACCEL_REDIRECT = True
+        settings.ULTIMATETHUMB_DOMAIN = 'statichost'
+        response = client.get(self.thumbnail.url)
+
+        thumbnail_storage._setup()
+        assert self.thumbnail.get_storage_url().startswith('//statichost')
+        assert response.status_code == 200
+        assert response['X-Accel-Redirect'].startswith(
+            '/{0}'.format(self.thumbnail.get_name()))
+
+        settings.ULTIMATETHUMB_DOMAIN = ''
+        thumbnail_storage._setup()
 
     def test_get_last_modified(self, client, settings):
         settings.ULTIMATETHUMB_USE_X_ACCEL_REDIRECT = True

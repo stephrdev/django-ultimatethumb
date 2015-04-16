@@ -3,7 +3,7 @@ import pytest
 from django.core.cache import cache
 
 from ultimatethumb.utils import (
-    factor_size, get_cache_key, get_thumb_data, get_thumb_name, parse_sizes)
+    build_url, factor_size, get_cache_key, get_thumb_data, get_thumb_name, parse_sizes)
 
 
 def test_get_cache_key():
@@ -85,3 +85,28 @@ class TestFactorSize:
 
     def test_percent_int(self):
         assert factor_size('10%', 2) == '20%'
+
+
+class TestBuildUrl:
+    def test_no_factor(self):
+        assert build_url('207736f753aeca1bdbc5ebd4d2e265d45194fc28/test.jpg') == (
+            '/207736f753aeca1bdbc5ebd4d2e265d45194fc28/test.jpg')
+
+    def test_with_factor(self):
+        assert build_url('207736f753aeca1bdbc5ebd4d2e265d45194fc28/test.jpg', 2) == (
+            '/2x/207736f753aeca1bdbc5ebd4d2e265d45194fc28/test.jpg')
+
+    def test_domain_with_scheme(self, settings):
+        settings.ULTIMATETHUMB_DOMAIN = 'http://statichost'
+        assert build_url('207736f753aeca1bdbc5ebd4d2e265d45194fc28/test.jpg') == (
+            'http://statichost/207736f753aeca1bdbc5ebd4d2e265d45194fc28/test.jpg')
+
+    def test_domain_no_scheme(self, settings):
+        settings.ULTIMATETHUMB_DOMAIN = '//statichost'
+        assert build_url('207736f753aeca1bdbc5ebd4d2e265d45194fc28/test.jpg') == (
+            '//statichost/207736f753aeca1bdbc5ebd4d2e265d45194fc28/test.jpg')
+
+    def test_domain_missing_scheme(self, settings):
+        settings.ULTIMATETHUMB_DOMAIN = 'statichost'
+        assert build_url('207736f753aeca1bdbc5ebd4d2e265d45194fc28/test.jpg') == (
+            '//statichost/207736f753aeca1bdbc5ebd4d2e265d45194fc28/test.jpg')

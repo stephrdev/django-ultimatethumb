@@ -3,11 +3,10 @@ from collections import namedtuple
 
 from barbeque.commands.imaging import GmConvertCommand
 from barbeque.files import MoveableNamedTemporaryFile
-from django.core.urlresolvers import reverse
 from django.utils.datastructures import SortedDict
 
 from .storage import thumbnail_storage
-from .utils import factor_size, get_size_for_path, get_thumb_data, get_thumb_name
+from .utils import build_url, factor_size, get_size_for_path, get_thumb_data, get_thumb_name
 
 
 Size = namedtuple('Size', ('width', 'height'))
@@ -42,11 +41,11 @@ class Thumbnail(object):
 
     @property
     def url(self):
-        return reverse('thumbnail', kwargs={'name': self.get_name()})
+        return build_url(self.get_name())
 
     @property
     def url_2x(self):
-        return reverse('thumbnail-factor', kwargs={'factor': 2, 'name': self.get_name()})
+        return build_url(self.get_name(), 2)
 
     @property
     def requested_size(self):
