@@ -124,7 +124,7 @@ class Thumbnail(object):
 
         tmpfile = MoveableNamedTemporaryFile(thumb_name)
         resizer = GmConvertCommand(
-            infile='"{0}"'.format(self.source),
+            infile=self.source,
             outfile=tmpfile.temporary_file_path(),
             options=self.get_gm_options(factor)
         )
