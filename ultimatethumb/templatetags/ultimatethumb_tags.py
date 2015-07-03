@@ -27,12 +27,14 @@ def ultimatethumb(
     quality=90
 ):
     if source.startswith('static:'):
-        source = find(source[7:])
+        source = source[7:]
 
         # Don't hash if in debug mode. This will also fail hard if the
         # staticfiles storage doesn't support hashing of filenames.
         if not settings.DEBUG:
             source = staticfiles_storage.hashed_name(source)
+
+        source = find(source)
     else:
         if not source.startswith('/'):
             source = default_storage.path(source)
