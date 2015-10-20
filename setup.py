@@ -44,8 +44,8 @@ setup(
     test_suite='.',
     tests_require=tests_require,
     install_requires=[
-        'Django>=1.6,<1.8',
-        'barbeque>=0.2.1,<0.3.0',
+        'Django>=1.6,<1.9',
+        'barbeque>=0.2.1,<0.4.0',
         'Pillow',
     ],
     extras_require={
@@ -64,6 +64,7 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: Implementation :: CPython',
         'Framework :: Django',
     ],
