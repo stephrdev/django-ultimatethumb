@@ -20,7 +20,7 @@ class TestThumbnail:
     def test_repr(self):
         thumbnail = Thumbnail('test.jpg', {'size': ['100', '100'], 'upscale': False})
         assert repr(thumbnail) == (
-            "<Thumbnail: test.jpg crop=False size=['100', '100'] upscale=False>")
+            "<Thumbnail: test.jpg crop=False pngquant=None size=['100', '100'] upscale=False>")
 
     def test_invalid_opts(self):
         with pytest.raises(ValueError) as exc:
@@ -30,7 +30,7 @@ class TestThumbnail:
 
     def test_get_name(self):
         thumbnail = Thumbnail('test.jpg', {'size': ['100', '100']})
-        assert thumbnail.get_name() == '48382ea502faf93772a5b07f7d8a590f01d0f15b/test.jpg'
+        assert thumbnail.get_name() == '6de70851f77fe7e8fa2ba5966e27d1a8b364274a/test.jpg'
 
     def test_from_name(self):
         thumbnail = Thumbnail('test.jpg', {'size': ['100', '100']})
@@ -61,12 +61,12 @@ class TestThumbnail:
     def test_url(self):
         thumbnail = Thumbnail('test.jpg', {'size': ['100', '100']})
         assert thumbnail.url == (
-            '/48382ea502faf93772a5b07f7d8a590f01d0f15b/test.jpg')
+            '/6de70851f77fe7e8fa2ba5966e27d1a8b364274a/test.jpg')
 
     def test_url_2x(self):
         thumbnail = Thumbnail('test.jpg', {'size': ['100', '100']})
         assert thumbnail.url_2x == (
-            '/2x/48382ea502faf93772a5b07f7d8a590f01d0f15b/test.jpg')
+            '/2x/6de70851f77fe7e8fa2ba5966e27d1a8b364274a/test.jpg')
 
     def test_requested_size(self):
         thumbnail = Thumbnail('test.jpg', {'size': ['100', '50']})
@@ -80,6 +80,30 @@ class TestThumbnail:
 
         assert thumbnail.exists() is False
         assert generate_mock.called is False
+
+    @mock.patch('ultimatethumb.thumbnail.PngquantCommand.execute')
+    def test_generate_pngquant_disabled(self, pngquant_mock):
+        image = ImageModelFactory.create()
+        thumbnail = Thumbnail(image.file.path, {'size': ['50', '50']})
+
+        assert thumbnail.generate() is True
+        assert pngquant_mock.called is False
+
+    @mock.patch('ultimatethumb.thumbnail.PngquantCommand.execute')
+    def test_generate_pngquant_no_png(self, pngquant_mock):
+        image = ImageModelFactory.create()
+        thumbnail = Thumbnail(image.file.path, {'size': ['50', '50'], 'pngquant': '50'})
+
+        assert thumbnail.generate() is True
+        assert pngquant_mock.called is False
+
+    @mock.patch('ultimatethumb.thumbnail.PngquantCommand.execute')
+    def test_generate_pngquant_called(self, pngquant_mock):
+        image = ImageModelFactory.create(file__filename='test.png')
+        thumbnail = Thumbnail(image.file.path, {'size': ['50', '50'], 'pngquant': '50'})
+
+        assert thumbnail.generate() is True
+        assert pngquant_mock.called is True
 
     def test_exists(self):
         image = ImageModelFactory.create()

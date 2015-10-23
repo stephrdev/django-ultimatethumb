@@ -3,8 +3,10 @@ from collections import namedtuple
 
 from barbeque.commands.imaging import GmConvertCommand
 from barbeque.files import MoveableNamedTemporaryFile
+from django.conf import settings
 from django.utils.datastructures import SortedDict
 
+from .commands import PngquantCommand
 from .storage import thumbnail_storage
 from .utils import build_url, factor_size, get_size_for_path, get_thumb_data, get_thumb_name
 
@@ -19,7 +21,11 @@ class Thumbnail(object):
         if 'size' not in opts:
             raise ValueError('`size` is required but missing in thumbnail options')
 
-        self.options = {'crop': False, 'upscale': False}
+        self.options = {
+            'crop': False,
+            'upscale': False,
+            'pngquant': getattr(settings, 'ULTIMATETHUMB_PNGQUANT_QUALITY', None)
+        }
         self.options.update(opts)
 
     def __repr__(self):
@@ -128,7 +134,12 @@ class Thumbnail(object):
             outfile=tmpfile.temporary_file_path(),
             options=self.get_gm_options(factor)
         )
-        assert resizer.execute()
+        assert resizer.execute(fail_silently=True)
+
+        if self.options['pngquant'] and os.path.splitext(thumb_name)[1] == '.png':
+            optimizer = PngquantCommand(
+                pngfile=tmpfile.temporary_file_path(), quality=self.options['pngquant'])
+            assert optimizer.execute()
 
         thumbnail_storage.save(thumb_name, tmpfile)
 
