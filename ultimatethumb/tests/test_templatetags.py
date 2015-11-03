@@ -73,6 +73,51 @@ class TestUltimatethumbTags:
         assert context['img'][0].source == os.path.join(
             settings.MEDIA_ROOT, source.file.name)
 
+    def test_crop(self):
+        source = ImageModelFactory.create(file__width=210, file__height=100)
+
+        template = Template((
+            '{%% load ultimatethumb_tags %%}'
+            '{%% ultimatethumb "img" "%s" sizes="200x0" crop=True %%}'
+        ) % source.file.path)
+
+        context = Context()
+        template.render(context)
+
+        assert 'img' in context
+        assert len(context['img']) == 1
+        assert context['img'][0].options['crop'] is True
+
+    def test_quality(self):
+        source = ImageModelFactory.create(file__width=210, file__height=100)
+
+        template = Template((
+            '{%% load ultimatethumb_tags %%}'
+            '{%% ultimatethumb "img" "%s" sizes="200x0" quality=10 %%}'
+        ) % source.file.path)
+
+        context = Context()
+        template.render(context)
+
+        assert 'img' in context
+        assert len(context['img']) == 1
+        assert context['img'][0].options['quality'] == 10
+
+    def test_pngquant(self):
+        source = ImageModelFactory.create(file__width=210, file__height=100)
+
+        template = Template((
+            '{%% load ultimatethumb_tags %%}'
+            '{%% ultimatethumb "img" "%s" sizes="200x0" pngquant=10 %%}'
+        ) % source.file.path)
+
+        context = Context()
+        template.render(context)
+
+        assert 'img' in context
+        assert len(context['img']) == 1
+        assert context['img'][0].options['pngquant'] == 10
+
     def test_oversize(self):
         source = ImageModelFactory.create(file__width=210, file__height=100)
 
@@ -130,5 +175,34 @@ class TestUltimatethumbTags:
         assert len(context['img']) == 2
         assert context['img'][0].requested_size.width == '100'
         assert context['img'][0].requested_size.height == '0'
+        assert context['img'][0].url is not None
+        assert context['img'][0].url_2x is not None
         assert context['img'][1].requested_size.width == '105'
         assert context['img'][1].requested_size.height == '50'
+        assert context['img'][1].url is not None
+        assert context['img'][1].url_2x is not None
+
+    def test_retina_disabled(self):
+        source = ImageModelFactory.create(file__width=210, file__height=100)
+
+        template = Template((
+            '{%% load ultimatethumb_tags %%}'
+            '{%% ultimatethumb "img" "%s" sizes="100x0,200x0,300x0,400x0" retina=False %%}'
+        ) % source.file.path)
+
+        context = Context()
+        template.render(context)
+
+        assert 'img' in context
+        assert len(context['img']) == 3
+        assert context['img'][0].requested_size.width == '100'
+        assert context['img'][0].requested_size.height == '0'
+        assert context['img'][0].url is not None
+        assert context['img'][0].url_2x is None
+        assert context['img'][1].requested_size.width == '200'
+        assert context['img'][1].requested_size.height == '0'
+        assert context['img'][1].url is not None
+        assert context['img'][1].url_2x is None
+        assert context['img'][2].requested_size.width == '210'
+        assert context['img'][2].requested_size.height == '100'
+        assert context['img'][2].url is not None

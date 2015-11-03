@@ -18,9 +18,10 @@ def ultimatethumb(
     source,
     sizes=None,
     upscale=False,
-    crop=False,
+    crop=None,
     retina=True,
-    quality=90
+    quality=None,
+    pngquant=None
 ):
     source = parse_source(source)
 
@@ -33,7 +34,16 @@ def ultimatethumb(
         context[as_var] = None
         return ''
 
-    thumbnails = []
+    thumbnail_options = {'upscale': upscale}
+
+    if crop is not None:
+        thumbnail_options['crop'] = crop
+
+    if quality is not None:
+        thumbnail_options['quality'] = quality
+
+    if pngquant is not None:
+        thumbnail_options['pngquant'] = pngquant
 
     source_size = get_size_for_path(source)
 
@@ -42,22 +52,21 @@ def ultimatethumb(
     # are doubled in size. Doing this, we never have to upscale the image.
     if retina:
         source_size = (int(source_size[0] / 2), int(source_size[1] / 2))
+    else:
+        thumbnail_options['factor2x'] = False
+
+    thumbnails = []
 
     oversize = False
-
     for size in parse_sizes(sizes):
         if '%' not in size[0] and not upscale:
             if int(size[0]) > source_size[0] or int(size[1]) > source_size[1]:
                 size = [str(source_size[0]), str(source_size[1])]
                 oversize = True
 
-        thumbnails.append(
-            Thumbnail(source, {
-                'size': size,
-                'upscale': upscale,
-                'crop': crop,
-                'quality': quality
-            }))
+        options = {'size': size}
+        options.update(thumbnail_options)
+        thumbnails.append(Thumbnail(source, options))
 
         if oversize:
             break
