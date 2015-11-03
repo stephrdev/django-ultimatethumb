@@ -4,7 +4,10 @@ import os
 import re
 
 from django.conf import settings
+from django.contrib.staticfiles.finders import find
+from django.contrib.staticfiles.storage import staticfiles_storage
 from django.core.cache import cache
+from django.core.files.storage import default_storage
 from django.core.urlresolvers import reverse
 from django.utils.datastructures import SortedDict
 from django.utils.encoding import force_bytes
@@ -49,6 +52,23 @@ def get_thumb_data(thumb_name):
 
     data = json.loads(serialized_data)
     return (data['source'], data['opts'])
+
+
+def parse_source(source):
+    if source.startswith('static:'):
+        source = source[7:]
+
+        # Don't hash if in debug mode. This will also fail hard if the
+        # staticfiles storage doesn't support hashing of filenames.
+        if not settings.DEBUG:
+            source = staticfiles_storage.hashed_name(source)
+
+        source = find(source)
+    else:
+        if not source.startswith('/'):
+            source = default_storage.path(source)
+
+    return source
 
 
 def parse_sizes(value):

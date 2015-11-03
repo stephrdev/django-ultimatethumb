@@ -1,13 +1,9 @@
 import os
 
-from django.conf import settings
-from django.contrib.staticfiles.finders import find
-from django.contrib.staticfiles.storage import staticfiles_storage
-from django.core.files.storage import default_storage
 from django.template import Library
 
 from ..thumbnail import Thumbnail
-from ..utils import get_size_for_path, parse_sizes
+from ..utils import get_size_for_path, parse_sizes, parse_source
 
 
 VALID_IMAGE_FILE_EXTENSIONS = ('jpg', 'jpeg', 'png', 'gif', 'ico')
@@ -26,18 +22,7 @@ def ultimatethumb(
     retina=True,
     quality=90
 ):
-    if source.startswith('static:'):
-        source = source[7:]
-
-        # Don't hash if in debug mode. This will also fail hard if the
-        # staticfiles storage doesn't support hashing of filenames.
-        if not settings.DEBUG:
-            source = staticfiles_storage.hashed_name(source)
-
-        source = find(source)
-    else:
-        if not source.startswith('/'):
-            source = default_storage.path(source)
+    source = parse_source(source)
 
     if not source:
         context[as_var] = None
