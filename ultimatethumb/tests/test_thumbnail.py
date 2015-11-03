@@ -20,7 +20,9 @@ class TestThumbnail:
     def test_repr(self):
         thumbnail = Thumbnail('test.jpg', {'size': ['100', '100'], 'upscale': False})
         assert repr(thumbnail) == (
-            "<Thumbnail: test.jpg crop=False pngquant=None size=['100', '100'] upscale=False>")
+            "<Thumbnail: test.jpg crop=False factor2x=True pngquant=None"
+            " quality=90 size=['100', '100'] upscale=False>"
+        )
 
     def test_invalid_opts(self):
         with pytest.raises(ValueError) as exc:
@@ -30,7 +32,7 @@ class TestThumbnail:
 
     def test_get_name(self):
         thumbnail = Thumbnail('test.jpg', {'size': ['100', '100']})
-        assert thumbnail.get_name() == '6de70851f77fe7e8fa2ba5966e27d1a8b364274a/test.jpg'
+        assert thumbnail.get_name() == '821b6e68771352f0bc53acd8e8144972a56dd0ac/test.jpg'
 
     def test_from_name(self):
         thumbnail = Thumbnail('test.jpg', {'size': ['100', '100']})
@@ -61,12 +63,12 @@ class TestThumbnail:
     def test_url(self):
         thumbnail = Thumbnail('test.jpg', {'size': ['100', '100']})
         assert thumbnail.url == (
-            '/6de70851f77fe7e8fa2ba5966e27d1a8b364274a/test.jpg')
+            '/821b6e68771352f0bc53acd8e8144972a56dd0ac/test.jpg')
 
     def test_url_2x(self):
         thumbnail = Thumbnail('test.jpg', {'size': ['100', '100']})
         assert thumbnail.url_2x == (
-            '/2x/6de70851f77fe7e8fa2ba5966e27d1a8b364274a/test.jpg')
+            '/2x/821b6e68771352f0bc53acd8e8144972a56dd0ac/test.jpg')
 
     def test_requested_size(self):
         thumbnail = Thumbnail('test.jpg', {'size': ['100', '50']})
@@ -142,7 +144,8 @@ class TestThumbnail:
             ('+profile', '"*"'),
             ('resize', '50x25^'),
             ('gravity', 'Center'),
-            ('crop', '50x25+0+0')
+            ('crop', '50x25+0+0'),
+            ('quality', 90),
         ]
 
     def test_gm_options_quality(self):

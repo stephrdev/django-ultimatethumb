@@ -24,7 +24,9 @@ class Thumbnail(object):
         self.options = {
             'crop': False,
             'upscale': False,
-            'pngquant': getattr(settings, 'ULTIMATETHUMB_PNGQUANT_QUALITY', None)
+            'factor2x': True,
+            'quality': getattr(settings, 'ULTIMATETHUMB_GRAPHICSMAGICK_QUALITY', 90),
+            'pngquant': getattr(settings, 'ULTIMATETHUMB_PNGQUANT_QUALITY', None),
         }
         self.options.update(opts)
 
@@ -51,7 +53,7 @@ class Thumbnail(object):
 
     @property
     def url_2x(self):
-        return build_url(self.get_name(), 2)
+        return build_url(self.get_name(), 2) if self.options['factor2x'] else None
 
     @property
     def requested_size(self):
@@ -176,7 +178,6 @@ class Thumbnail(object):
                 factor_size(size[1], factor)
             )
 
-        if 'quality' in self.options:
-            gm_options['quality'] = self.options['quality']
+        gm_options['quality'] = self.options['quality']
 
         return gm_options
