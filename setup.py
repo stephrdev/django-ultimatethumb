@@ -13,6 +13,8 @@ def read(*parts):
 
 
 tests_require = [
+    'tox',
+    'tox-pyenv',
     'coverage',
     'mock',
     'pytest',
