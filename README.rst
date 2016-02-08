@@ -78,7 +78,7 @@ call the ``ultimatethumb`` tag with proper parameters:
 .. code-block:: html
 
     {% load ultimatethumb_tags %}
-    {% ultimatethumb 'mythumb' image.file.name sizes='400x0,200x0' %}
+    {% ultimatethumb 'mythumb' mymodel.imagefield.name sizes='400x0,200x0' %}
     <picture>
     {% for source in mythumb %}
         <source
@@ -97,7 +97,7 @@ You can also use `django-ultimatethumb` in a much simpler way:
 .. code-block:: html
 
     {% load ultimatethumb_tags %}
-    {% ultimatethumb 'mythumb' image.file.name sizes='400x0' %}
+    {% ultimatethumb 'mythumb' mymodel.imagefield.name sizes='400x0' %}
     <img src="{{ mythumb.0.url }}" />
 
 To resize static images, just prefix the path with ``static:``, for example:
