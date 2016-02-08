@@ -103,8 +103,10 @@ def get_size_for_path(path):
     Gets the image size for a given path. If the path does not exist, the call
     will fail loud with e.g. OSError exception.
     """
-    image = PILImage.open(path)
-    return image.size
+    with open(path, 'rb') as image_file:
+        image = PILImage.open(image_file)
+        size = image.size
+    return size
 
 
 def get_domain_url(url):
