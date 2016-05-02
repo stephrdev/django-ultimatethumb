@@ -4,12 +4,16 @@ from collections import namedtuple
 from barbeque.commands.imaging import GmConvertCommand
 from barbeque.files import MoveableNamedTemporaryFile
 from django.conf import settings
-from django.utils.datastructures import SortedDict
 
 from .commands import PngquantCommand
 from .storage import thumbnail_storage
 from .utils import build_url, factor_size, get_size_for_path, get_thumb_data, get_thumb_name
 
+
+try:
+    from collections import OrderedDict
+except ImportError:
+    from django.utils.datastructures import SortedDict as OrderedDict
 
 Size = namedtuple('Size', ('width', 'height'))
 
@@ -148,7 +152,7 @@ class Thumbnail(object):
         return True
 
     def get_gm_options(self, factor=1):
-        gm_options = SortedDict()
+        gm_options = OrderedDict()
 
         # Remove any icc profiles to avoid problems.
         gm_options['+profile'] = '"*"'

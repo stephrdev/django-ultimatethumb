@@ -9,10 +9,15 @@ from django.contrib.staticfiles.storage import staticfiles_storage
 from django.core.cache import cache
 from django.core.files.storage import default_storage
 from django.core.urlresolvers import reverse
-from django.utils.datastructures import SortedDict
 from django.utils.encoding import force_bytes
 from django.utils.six.moves.urllib import parse as urlparse
 from PIL import Image as PILImage
+
+
+try:
+    from collections import OrderedDict
+except ImportError:
+    from django.utils.datastructures import SortedDict as OrderedDict
 
 
 SIZE_RE = re.compile(r'(?:(\d+%?)x(\d+%?))')
@@ -27,10 +32,9 @@ def get_cache_key(key):
 
 def get_thumb_name(source, **options):
     source_name, source_ext = os.path.splitext(os.path.basename(source))
-    data = SortedDict()
+    data = OrderedDict()
     data['source'] = source
-    data['opts'] = SortedDict(options)
-    data['opts'].keyOrder = sorted(data['opts'].keyOrder)
+    data['opts'] = OrderedDict(sorted(options.items()))
 
     serialized_data = json.dumps(data)
     hashed_data = hashlib.sha1(force_bytes(serialized_data)).hexdigest()
