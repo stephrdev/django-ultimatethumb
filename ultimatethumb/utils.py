@@ -34,7 +34,7 @@ def get_thumb_name(source, **options):
     source_name, source_ext = os.path.splitext(os.path.basename(source))
     data = OrderedDict()
     data['source'] = source
-    data['opts'] = OrderedDict(sorted(options.items()))
+    data['opts'] = OrderedDict(sorted(options.items(), key=lambda i: i[0]))
 
     serialized_data = json.dumps(data)
     hashed_data = hashlib.sha1(force_bytes(serialized_data)).hexdigest()
