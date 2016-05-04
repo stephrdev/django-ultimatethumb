@@ -1,7 +1,13 @@
 Changelog
 =========
 
+0.4.0 - 2016-05-04
+------------------
+
+* Added support for Django 1.9
+
 0.3.0 - 2015-11-03
+------------------
 
 * Added pngquant support
 * Bugfix for retina / factor2x mode

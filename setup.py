@@ -32,7 +32,7 @@ setup(
     name='django-ultimatethumb',
     description='Generate thumbnails of anything.',
     long_description=read('README.rst'),
-    version='0.3.0',
+    version='0.4.0',
     license='BSD',
     author='Moccu GmbH & Co. KG',
     author_email='info@moccu.com',
