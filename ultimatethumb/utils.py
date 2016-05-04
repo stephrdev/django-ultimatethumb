@@ -2,6 +2,7 @@ import hashlib
 import json
 import os
 import re
+from collections import OrderedDict
 
 from django.conf import settings
 from django.contrib.staticfiles.finders import find
@@ -12,12 +13,6 @@ from django.core.urlresolvers import reverse
 from django.utils.encoding import force_bytes
 from django.utils.six.moves.urllib import parse as urlparse
 from PIL import Image as PILImage
-
-
-try:
-    from collections import OrderedDict
-except ImportError:
-    from django.utils.datastructures import SortedDict as OrderedDict
 
 
 SIZE_RE = re.compile(r'(?:(\d+%?)x(\d+%?))')

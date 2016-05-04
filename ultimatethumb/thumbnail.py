@@ -1,5 +1,5 @@
 import os
-from collections import namedtuple
+from collections import OrderedDict, namedtuple
 
 from barbeque.commands.imaging import GmConvertCommand
 from barbeque.files import MoveableNamedTemporaryFile
@@ -9,11 +9,6 @@ from .commands import PngquantCommand
 from .storage import thumbnail_storage
 from .utils import build_url, factor_size, get_size_for_path, get_thumb_data, get_thumb_name
 
-
-try:
-    from collections import OrderedDict
-except ImportError:
-    from django.utils.datastructures import SortedDict as OrderedDict
 
 Size = namedtuple('Size', ('width', 'height'))
 
