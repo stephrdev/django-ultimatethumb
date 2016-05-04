@@ -1,10 +1,9 @@
 import os
-from collections import namedtuple
+from collections import OrderedDict, namedtuple
 
 from barbeque.commands.imaging import GmConvertCommand
 from barbeque.files import MoveableNamedTemporaryFile
 from django.conf import settings
-from django.utils.datastructures import SortedDict
 
 from .commands import PngquantCommand
 from .storage import thumbnail_storage
@@ -148,7 +147,7 @@ class Thumbnail(object):
         return True
 
     def get_gm_options(self, factor=1):
-        gm_options = SortedDict()
+        gm_options = OrderedDict()
 
         # Remove any icc profiles to avoid problems.
         gm_options['+profile'] = '"*"'
