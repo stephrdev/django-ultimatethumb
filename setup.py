@@ -2,8 +2,21 @@
 # -*- coding: utf-8 -*-
 import codecs
 import os
+import sys
 
 from setuptools import find_packages, setup
+
+
+version = '0.4.0'
+
+
+if sys.argv[-1] == 'publish':
+    os.system('python setup.py sdist upload')
+    os.system('python setup.py bdist_wheel upload')
+    print('You probably want to also tag the version now:')
+    print('  git tag -a %s -m "version %s"' % (version, version))
+    print('  git push --tags')
+    sys.exit()
 
 
 def read(*parts):
@@ -32,7 +45,7 @@ setup(
     name='django-ultimatethumb',
     description='Generate thumbnails of anything.',
     long_description=read('README.rst'),
-    version='0.4.0',
+    version=version,
     license='BSD',
     author='Moccu GmbH & Co. KG',
     author_email='info@moccu.com',
