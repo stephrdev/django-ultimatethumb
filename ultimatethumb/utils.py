@@ -61,8 +61,9 @@ def parse_source(source):
         # staticfiles storage doesn't support hashing of filenames.
         if not settings.DEBUG:
             source = staticfiles_storage.hashed_name(source)
-
-        source = find(source)
+            source = staticfiles_storage.path(source)
+        else:
+            source = find(source)
     else:
         if not source.startswith('/'):
             source = default_storage.path(source)
