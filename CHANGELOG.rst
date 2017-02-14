@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.5.0 - 2017-02-14
+------------------
+
+* Fix bug when using static: sources in DEBUG=False and not using django-compressor
+* Drop support for Django <1.8
+
 0.4.1 - 2016-05-04
 ------------------
 
