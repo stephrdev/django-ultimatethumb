@@ -59,8 +59,8 @@ setup(
     test_suite='.',
     tests_require=tests_require,
     install_requires=[
-        'Django>=1.6,<1.10',
-        'barbeque>=0.2.1,<1.1.0',
+        'Django>=1.8,<1.10',
+        'barbeque>=1.4',
         'Pillow',
     ],
     extras_require={
