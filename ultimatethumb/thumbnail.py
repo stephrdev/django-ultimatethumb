@@ -4,10 +4,12 @@ from collections import OrderedDict, namedtuple
 from barbeque.commands.imaging import GmConvertCommand
 from barbeque.files import MoveableNamedTemporaryFile
 from django.conf import settings
+from django.utils.functional import cached_property
 
 from .commands import PngquantCommand
 from .storage import thumbnail_storage
-from .utils import build_url, factor_size, get_size_for_path, get_thumb_data, get_thumb_name
+from .utils import (
+    build_url, factor_size, get_size_for_path, get_thumb_data, get_thumb_name, parse_sizes)
 
 
 CROP_GRAVITY = {
@@ -35,6 +37,51 @@ CROP_GRAVITY = {
 
 
 Size = namedtuple('Size', ('width', 'height'))
+
+
+class ThumbnailSet(object):
+
+    def __init__(self, source, sizes, options):
+        self.source = source
+        self.sizes = sizes
+        self.options = options
+
+    @cached_property
+    def thumbnails(self):
+        return self.get_thumbnails()
+
+    def get_source_size(self):
+        # If retina option is enabled, pretend that the source is half as large as
+        # it is. We do this to ensure that we have "retina" images which effectively
+        # are doubled in size. Doing this, we never have to upscale the image.
+        source_size = get_size_for_path(self.source)
+        if self.options.get('factor2x', True):
+            source_size = int(source_size[0] / 2), int(source_size[1] / 2)
+
+        return source_size
+
+    def get_sizes(self):
+        return parse_sizes(self.sizes)
+
+    def get_thumbnails(self):
+        thumbnails = []
+        source_size = self.get_source_size()
+
+        oversize = False
+        for size in self.get_sizes():
+            if '%' not in size[0] and not self.options.get('upscale', False):
+                if int(size[0]) > source_size[0] or int(size[1]) > source_size[1]:
+                    size = [str(source_size[0]), str(source_size[1])]
+                    oversize = True
+
+            options = {'size': size}
+            options.update(self.options)
+            thumbnails.append(Thumbnail(self.source, options))
+
+            if oversize:
+                break
+
+        return thumbnails
 
 
 class Thumbnail(object):
@@ -67,7 +114,7 @@ class Thumbnail(object):
     def get_name(self):
         return get_thumb_name(self.source, **self.options)
 
-    @property
+    @cached_property
     def size(self):
         return self.get_estimated_size()
 
