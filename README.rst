@@ -110,3 +110,21 @@ To resize static images, just prefix the path with ``static:``, for example:
 
 There are many other options/parameters to pass to the templatetag. Please refer
 to the codebase until the documentation is more complete.
+
+
+Options
+-------
+
+You can pass some options to the thumbnail tag:
+
+* upscale: Configures if the input should be upscaled if requested sizes are larger than source.
+* retina: Option to enable retina support (by providing both url and url_2x)
+* crop: Deside if images should be cropped if requested sizes doesn't fit source aspect ratio.
+* quality: Configures quality for image compression
+* pngquant: Configures the pngquant compression factor
+
+.. hint::
+
+    The `crop` option can be set to True for default gravity when cropping (which is `Center`).
+    You can also pass valid GraphicsMagick gravities (North, NorthEeast, East, SouthEast, ...)
+    or their abbreviation (N, NE, E, SE, ...)

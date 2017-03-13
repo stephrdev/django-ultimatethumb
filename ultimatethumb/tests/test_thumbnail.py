@@ -148,6 +148,37 @@ class TestThumbnail:
             ('quality', 90),
         ]
 
+    @pytest.mark.parametrize('crop,expected', [
+        (True, 'Center'),
+        (1, 'Center'),
+        ('C', 'Center'),
+        ('N', 'North'),
+        ('NW', 'NorthWest'),
+        ('NE', 'NorthEast'),
+        ('W', 'West'),
+        ('E', 'East'),
+        ('S', 'South'),
+        ('SW', 'SouthWest'),
+        ('SE', 'SouthEast'),
+        ('Center', 'Center'),
+        ('North', 'North'),
+        ('NorthWest', 'NorthWest'),
+        ('NorthEast', 'NorthEast'),
+        ('West', 'West'),
+        ('East', 'East'),
+        ('South', 'South'),
+        ('SouthWest', 'SouthWest'),
+        ('SouthEast', 'SouthEast'),
+        (0, None),
+        (False, None),
+        (None, None),
+        ('invalid', None),
+    ])
+    def test_gm_options_crop_gravities(self, crop, expected):
+        image = ImageModelFactory.create()
+        thumbnail = Thumbnail(image.file.path, {'size': ['100', '50'], 'crop': crop})
+        assert thumbnail.get_gm_options().get('gravity', None) == expected
+
     def test_gm_options_quality(self):
         image = ImageModelFactory.create()
         thumbnail = Thumbnail(image.file.path, {'size': ['100', '50'], 'quality': 5})

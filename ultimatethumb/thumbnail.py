@@ -10,10 +10,35 @@ from .storage import thumbnail_storage
 from .utils import build_url, factor_size, get_size_for_path, get_thumb_data, get_thumb_name
 
 
+CROP_GRAVITY = {
+    True: 'Center',
+    1: 'Center',
+    'C': 'Center',
+    'N': 'North',
+    'NW': 'NorthWest',
+    'NE': 'NorthEast',
+    'W': 'West',
+    'E': 'East',
+    'S': 'South',
+    'SW': 'SouthWest',
+    'SE': 'SouthEast',
+    'Center': 'Center',
+    'North': 'North',
+    'NorthWest': 'NorthWest',
+    'NorthEast': 'NorthEast',
+    'West': 'West',
+    'East': 'East',
+    'South': 'South',
+    'SouthWest': 'SouthWest',
+    'SouthEast': 'SouthEast',
+}
+
+
 Size = namedtuple('Size', ('width', 'height'))
 
 
 class Thumbnail(object):
+
     def __init__(self, source, opts):
         self.source = source
 
@@ -170,8 +195,9 @@ class Thumbnail(object):
             resize_attrs
         )
 
-        if self.options['crop']:
-            gm_options['gravity'] = 'Center'
+        crop = CROP_GRAVITY.get(self.options['crop'], False)
+        if crop:
+            gm_options['gravity'] = crop
             gm_options['crop'] = '{0}x{1}+0+0'.format(
                 factor_size(size[0], factor),
                 factor_size(size[1], factor)
