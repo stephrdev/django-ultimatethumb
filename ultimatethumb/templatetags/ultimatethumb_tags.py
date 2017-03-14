@@ -46,3 +46,4 @@ def ultimatethumb(
         thumbnail_options['pngquant'] = pngquant
 
     context[as_var] = ThumbnailSet(source, sizes, thumbnail_options).thumbnails
+    return ''

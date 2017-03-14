@@ -16,7 +16,7 @@ class TestUltimatethumbTags:
         ) % 'static:notexist.file')
 
         context = Context()
-        template.render(context)
+        assert template.render(context) == ''
 
         assert context['img'] is None
 
@@ -28,7 +28,7 @@ class TestUltimatethumbTags:
         ) % 'static:test.txt')
 
         context = Context()
-        template.render(context)
+        assert template.render(context) == ''
 
         assert context['img'] is None
 
@@ -40,7 +40,7 @@ class TestUltimatethumbTags:
         ) % 'static:50x50-placeholder.png')
 
         context = Context()
-        template.render(context)
+        assert template.render(context) == ''
 
         assert context['img'][0].source == os.path.join(
             settings.STATICFILES_DIRS[0], '50x50-placeholder.png')
@@ -54,7 +54,7 @@ class TestUltimatethumbTags:
         ) % source.file.path)
 
         context = Context()
-        template.render(context)
+        assert template.render(context) == ''
 
         assert context['img'][0].source == os.path.join(
             settings.MEDIA_ROOT, source.file.name)
@@ -68,7 +68,7 @@ class TestUltimatethumbTags:
         ) % source.file.name)
 
         context = Context()
-        template.render(context)
+        assert template.render(context) == ''
 
         assert context['img'][0].source == os.path.join(
             settings.MEDIA_ROOT, source.file.name)
@@ -82,7 +82,7 @@ class TestUltimatethumbTags:
         ) % source.file.path)
 
         context = Context()
-        template.render(context)
+        assert template.render(context) == ''
 
         assert 'img' in context
         assert len(context['img']) == 1
@@ -97,7 +97,7 @@ class TestUltimatethumbTags:
         ) % source.file.path)
 
         context = Context()
-        template.render(context)
+        assert template.render(context) == ''
 
         assert 'img' in context
         assert len(context['img']) == 1
@@ -112,7 +112,7 @@ class TestUltimatethumbTags:
         ) % source.file.path)
 
         context = Context()
-        template.render(context)
+        assert template.render(context) == ''
 
         assert 'img' in context
         assert len(context['img']) == 1
@@ -127,7 +127,7 @@ class TestUltimatethumbTags:
         ) % source.file.path)
 
         context = Context()
-        template.render(context)
+        assert template.render(context) == ''
 
         assert 'img' in context
         assert len(context['img']) == 3
@@ -147,7 +147,7 @@ class TestUltimatethumbTags:
         ) % source.file.path)
 
         context = Context()
-        template.render(context)
+        assert template.render(context) == ''
 
         assert 'img' in context
         assert len(context['img']) == 4
@@ -169,7 +169,7 @@ class TestUltimatethumbTags:
         ) % source.file.path)
 
         context = Context()
-        template.render(context)
+        assert template.render(context) == ''
 
         assert 'img' in context
         assert len(context['img']) == 2
@@ -191,7 +191,7 @@ class TestUltimatethumbTags:
         ) % source.file.path)
 
         context = Context()
-        template.render(context)
+        assert template.render(context) == ''
 
         assert 'img' in context
         assert len(context['img']) == 3
