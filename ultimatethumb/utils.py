@@ -15,7 +15,7 @@ from django.utils.six.moves.urllib import parse as urlparse
 from PIL import Image as PILImage
 
 
-SIZE_RE = re.compile(r'(?:(\d+%?)x(\d+%?))')
+SIZE_RE = re.compile(r'^(\d+%?)(?:x(\d+%?))?(?:\:(\d+)(?:x(\d+))?)?$')
 
 
 def get_cache_key(key):
@@ -80,7 +80,12 @@ def parse_sizes(value):
         if not parsed_size:
             raise ValueError('{0} is not a valid size'.format(size))
 
-        parsed_sizes.append([parsed_size.groups()[0], parsed_size.groups()[1]])
+        parts = parsed_size.groups()
+        size = [parts[0], parts[1] or '0']
+        if parts[2]:
+            size += [parts[2], parts[3] or '0']
+
+        parsed_sizes.append(size)
 
     return parsed_sizes
 

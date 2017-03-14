@@ -74,7 +74,10 @@ class ThumbnailSet(object):
                     size = [str(source_size[0]), str(source_size[1])]
                     oversize = True
 
-            options = {'size': size}
+            options = {'size': size[0:2]}
+            if len(size) == 4:
+                options['viewport'] = size[2:4]
+
             options.update(self.options)
             thumbnails.append(Thumbnail(self.source, options))
 
@@ -112,11 +115,27 @@ class Thumbnail(object):
         return Thumbnail(*get_thumb_data(name))
 
     def get_name(self):
-        return get_thumb_name(self.source, **self.options)
+        return get_thumb_name(self.source, **dict(
+            (option, value)
+            for option, value in self.options.items()
+            if option not in ('viewport',)
+        ))
 
     @cached_property
     def size(self):
         return self.get_estimated_size()
+
+    @cached_property
+    def viewport(self):
+        viewport = self.options.get('viewport', None)
+
+        if not viewport:
+            return self.size
+
+        return Size(
+            int(viewport[0]) if viewport[0] != '0' else None,
+            int(viewport[1]) if viewport[1] != '0' else None
+        )
 
     @property
     def url(self):

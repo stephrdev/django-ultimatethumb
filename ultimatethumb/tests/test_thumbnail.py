@@ -31,14 +31,15 @@ class TestThumbnail:
         assert '`size` is required' in str(exc.value)
 
     def test_get_name(self):
-        thumbnail = Thumbnail('test.jpg', {'size': ['100', '100']})
+        thumbnail = Thumbnail('test.jpg', {'size': ['100', '100'], 'viewport': 'ignored'})
         assert thumbnail.get_name() == '821b6e68771352f0bc53acd8e8144972a56dd0ac/test.jpg'
 
     def test_from_name(self):
-        thumbnail = Thumbnail('test.jpg', {'size': ['100', '100']})
+        thumbnail = Thumbnail('test.jpg', {'size': ['100', '100'], 'viewport': 'ignored'})
         thumbnail2 = Thumbnail.from_name(thumbnail.get_name())
 
         assert thumbnail.source == thumbnail2.source
+        thumbnail.options.pop('viewport')
         assert thumbnail.options == thumbnail2.options
 
     def test_get_estimated_size(self):
@@ -348,3 +349,28 @@ class TestThumbnail:
                 crop,
                 upscale
             ))
+
+    @pytest.mark.parametrize('input_size,thumb_size,viewport,expected', [
+        ((200, 100), (100, 0), None, (100, 50)),
+        ((200, 100), (100, 100), None, (100, 50)),
+        ((200, 100), (100, 100), (100, 0), (100, None)),
+        ((200, 100), (100, 100), (0, 100), (None, 100)),
+    ])
+    def test_viewport(self, input_size, thumb_size, viewport, expected):
+        image = ImageModelFactory.create(
+            file__width=input_size[0], file__height=input_size[1])
+
+        instance = Thumbnail(image.file.path, {
+            'size': (str(thumb_size[0]), str(thumb_size[1])),
+            'viewport': (str(viewport[0]), str(viewport[1])) if viewport else None,
+        })
+
+        assert_error = '{0} -> {1} / {2}'.format(
+            input_size,
+            thumb_size,
+            viewport,
+        )
+
+        viewport_size = instance.viewport
+        assert viewport_size.width == expected[0], assert_error
+        assert viewport_size.height == expected[1], assert_error

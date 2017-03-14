@@ -67,6 +67,14 @@ class TestParseSizes:
         assert parse_sizes('400x100,0x250,50%x0') == [
             ['400', '100'], ['0', '250'], ['50%', '0']]
 
+    def test_valid_short(self):
+        assert parse_sizes('400,250,50%') == [
+            ['400', '0'], ['250', '0'], ['50%', '0']]
+
+    def test_valid_mixed(self):
+        assert parse_sizes('400x100,250,0x50%') == [
+            ['400', '100'], ['250', '0'], ['0', '50%']]
+
     def test_invalid(self):
         with pytest.raises(ValueError):
             parse_sizes('400x100,Ax250')
@@ -74,6 +82,35 @@ class TestParseSizes:
     def test_invalid_percent(self):
         with pytest.raises(ValueError):
             parse_sizes('5%0x0')
+
+    def test_valid_single_with_viewport(self):
+        assert parse_sizes('400x100:600x200') == [['400', '100', '600', '200']]
+
+    def test_valid_multiple_with_viewport(self):
+        assert parse_sizes('400x100:300x100,0x250:0x500,50%x0:1000x0') == [
+            ['400', '100', '300', '100'],
+            ['0', '250', '0', '500'],
+            ['50%', '0', '1000', '0']
+        ]
+
+    def test_valid_short_with_viewport(self):
+        assert parse_sizes('400:600,250:500,50%:200') == [
+            ['400', '0', '600', '0'],
+            ['250', '0', '500', '0'],
+            ['50%', '0', '200', '0']
+        ]
+
+    def test_valid_mixed_with_viewport(self):
+        assert parse_sizes('400x100:600,250,0x50%:200x500') == [
+            ['400', '100', '600', '0'], ['250', '0'], ['0', '50%', '200', '500']]
+
+    def test_invalid_viewport(self):
+        with pytest.raises(ValueError):
+            parse_sizes('400x100,Ax250')
+
+    def test_invalid_percent_viewport(self):
+        with pytest.raises(ValueError):
+            parse_sizes('400:50%x0')
 
 
 class TestFactorSize:

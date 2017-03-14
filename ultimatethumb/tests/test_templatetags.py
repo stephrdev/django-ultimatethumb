@@ -118,6 +118,22 @@ class TestUltimatethumbTags:
         assert len(context['img']) == 1
         assert context['img'][0].options['pngquant'] == 10
 
+    def test_viewport(self):
+        source = ImageModelFactory.create(file__width=400, file__height=100)
+
+        template = Template((
+            '{%% load ultimatethumb_tags %%}'
+            '{%% ultimatethumb "img" "%s" sizes="200:600" %%}'
+        ) % source.file.path)
+
+        context = Context()
+        assert template.render(context) == ''
+
+        assert 'img' in context
+        assert len(context['img']) == 1
+        assert context['img'][0].options['size'] == ['200', '0']
+        assert context['img'][0].options['viewport'] == ['600', '0']
+
     def test_oversize(self):
         source = ImageModelFactory.create(file__width=210, file__height=100)
 
