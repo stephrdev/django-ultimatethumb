@@ -1,6 +1,14 @@
 Changelog
 =========
 
+0.6.0 - 2017-07-31
+------------------
+
+* Added viewport support to pass viewport max-width/max-height in addition to size
+* Added support for crop gravity ("crop" now accepts True (fallback to "Center")
+  or a gravity orientation according to the GraphicsMagick documentation)
+
+
 0.5.0 - 2017-02-14
 ------------------
 
