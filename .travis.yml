@@ -12,7 +12,3 @@ install:
 
 script:
   - tox
-
-after_success:
-  - pip install coverage
-  - coverage report
