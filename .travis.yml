@@ -1,5 +1,4 @@
 language: python
-sudo: false
 
 python:
   - 2.7
@@ -7,6 +6,8 @@ python:
   - 3.5
 
 install:
+  - sudo apt-get update -y
+  - sudo apt-get install graphicsmagick libjpeg-dev
   - pip install tox-travis
 
 script:
