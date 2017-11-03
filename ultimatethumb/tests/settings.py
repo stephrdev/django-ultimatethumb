@@ -33,6 +33,8 @@ STATIC_URL = '/static/'
 ULTIMATETHUMB_ROOT = tempfile.mkdtemp()
 ULTIMATETHUMB_URL = '/'
 
-TEMPLATE_DIRS = (
-    os.path.join(os.path.dirname(__file__), 'resources', 'templates'),
-)
+TEMPLATES = [{
+    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+    'DIRS': [],
+    'APP_DIRS': True,
+}]
