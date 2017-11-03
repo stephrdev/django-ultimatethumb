@@ -70,8 +70,23 @@ class ThumbnailSet(object):
         oversize = False
         for size in self.get_sizes():
             if '%' not in size[0] and not self.options.get('upscale', False):
-                if int(size[0]) > source_size[0] or int(size[1]) > source_size[1]:
-                    size = [str(source_size[0]), str(source_size[1])]
+                thumb_size = (int(size[0]), int(size[1]))
+                if thumb_size[0] >= source_size[0] or thumb_size[1] >= source_size[1]:
+                    if self.options.get('crop', False):
+                        size[0] = str(min(source_size[0], thumb_size[0]))
+                        size[1] = str(min(source_size[1], thumb_size[1]))
+                    else:
+                        if thumb_size[0] >= source_size[0]:
+                            factor = float(source_size[0]) / thumb_size[0]
+                            size[0] = str(source_size[0])
+                            size[1] = str(int(round(
+                                thumb_size[1] * factor))) if thumb_size[1] else '0'
+                        else:
+                            factor = float(source_size[1]) / thumb_size[1]
+                            size[0] = str(int(round(
+                                thumb_size[0] * factor))) if thumb_size[0] else '0'
+                            size[1] = str(source_size[1])
+
                     oversize = True
 
             options = {'size': size[0:2]}

@@ -152,7 +152,7 @@ class TestUltimatethumbTags:
         assert context['img'][1].requested_size.width == '200'
         assert context['img'][1].requested_size.height == '0'
         assert context['img'][2].requested_size.width == '210'
-        assert context['img'][2].requested_size.height == '100'
+        assert context['img'][2].requested_size.height == '0'
 
     def test_oversize_upscale(self):
         source = ImageModelFactory.create(file__width=210, file__height=100)
@@ -176,6 +176,88 @@ class TestUltimatethumbTags:
         assert context['img'][3].requested_size.width == '400'
         assert context['img'][3].requested_size.height == '0'
 
+    def test_oversize_exact(self):
+        source = ImageModelFactory.create(file__width=210, file__height=100)
+
+        template = Template((
+            '{%% load ultimatethumb_tags %%}'
+            '{%% ultimatethumb "img" "%s" sizes="100x20,200x20,300x20,400x20" retina=False %%}'
+        ) % source.file.path)
+
+        context = Context()
+        assert template.render(context) == ''
+
+        assert 'img' in context
+        assert len(context['img']) == 3
+        assert context['img'][0].requested_size.width == '100'
+        assert context['img'][0].requested_size.height == '20'
+        assert context['img'][1].requested_size.width == '200'
+        assert context['img'][1].requested_size.height == '20'
+        assert context['img'][2].requested_size.width == '210'
+        assert context['img'][2].requested_size.height == '14'
+
+    def test_oversize_exact_crop(self):
+        source = ImageModelFactory.create(file__width=210, file__height=100)
+
+        template = Template((
+            '{%% load ultimatethumb_tags %%}'
+            '{%% ultimatethumb "img" "%s" sizes="100x20,200x20,300x20,400x20" '
+            'crop=True retina=False %%}'
+        ) % source.file.path)
+
+        context = Context()
+        assert template.render(context) == ''
+
+        assert 'img' in context
+        assert len(context['img']) == 3
+        assert context['img'][0].requested_size.width == '100'
+        assert context['img'][0].requested_size.height == '20'
+        assert context['img'][1].requested_size.width == '200'
+        assert context['img'][1].requested_size.height == '20'
+        assert context['img'][2].requested_size.width == '210'
+        assert context['img'][2].requested_size.height == '20'
+
+    def test_oversize_exact_cross_aspect(self):
+        source = ImageModelFactory.create(file__width=210, file__height=420)
+
+        template = Template((
+            '{%% load ultimatethumb_tags %%}'
+            '{%% ultimatethumb "img" "%s" sizes="100x20,200x20,300x20,400x20" retina=False %%}'
+        ) % source.file.path)
+
+        context = Context()
+        assert template.render(context) == ''
+
+        assert 'img' in context
+        assert len(context['img']) == 3
+        assert context['img'][0].requested_size.width == '100'
+        assert context['img'][0].requested_size.height == '20'
+        assert context['img'][1].requested_size.width == '200'
+        assert context['img'][1].requested_size.height == '20'
+        assert context['img'][2].requested_size.width == '210'
+        assert context['img'][2].requested_size.height == '14'
+
+    def test_oversize_exact_crop_cross_aspect(self):
+        source = ImageModelFactory.create(file__width=210, file__height=420)
+
+        template = Template((
+            '{%% load ultimatethumb_tags %%}'
+            '{%% ultimatethumb "img" "%s" sizes="100x20,200x20,300x20,400x20" '
+            'crop=True retina=False %%}'
+        ) % source.file.path)
+
+        context = Context()
+        assert template.render(context) == ''
+
+        assert 'img' in context
+        assert len(context['img']) == 3
+        assert context['img'][0].requested_size.width == '100'
+        assert context['img'][0].requested_size.height == '20'
+        assert context['img'][1].requested_size.width == '200'
+        assert context['img'][1].requested_size.height == '20'
+        assert context['img'][2].requested_size.width == '210'
+        assert context['img'][2].requested_size.height == '20'
+
     def test_retina(self):
         source = ImageModelFactory.create(file__width=210, file__height=100)
 
@@ -194,7 +276,7 @@ class TestUltimatethumbTags:
         assert context['img'][0].url is not None
         assert context['img'][0].url_2x is not None
         assert context['img'][1].requested_size.width == '105'
-        assert context['img'][1].requested_size.height == '50'
+        assert context['img'][1].requested_size.height == '0'
         assert context['img'][1].url is not None
         assert context['img'][1].url_2x is not None
 
@@ -220,5 +302,5 @@ class TestUltimatethumbTags:
         assert context['img'][1].url is not None
         assert context['img'][1].url_2x is None
         assert context['img'][2].requested_size.width == '210'
-        assert context['img'][2].requested_size.height == '100'
+        assert context['img'][2].requested_size.height == '0'
         assert context['img'][2].url is not None
