@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.8.0 - 2017-12-05
+------------------
+
+* Add support for base64 output of thumbnails
+
 0.7.0 - 2017-11-03
 ------------------
 
