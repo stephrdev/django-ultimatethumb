@@ -1,5 +1,4 @@
 import os
-from mimetypes import guess_type
 
 from django.conf import settings
 from django.http import Http404, HttpResponse, HttpResponseNotModified
@@ -29,10 +28,7 @@ class ThumbnailView(View):
         path = thumbnail.get_storage_path(factor)
 
         thumbnail_stat = os.stat(path)
-        mimetype, encoding = guess_type(path)
-
-        # No mimetype detected, set default.
-        mimetype = mimetype or 'application/octet-stream'
+        mimetype = thumbnail.get_mimetype()
 
         # Check for last modified.
         if not was_modified_since(

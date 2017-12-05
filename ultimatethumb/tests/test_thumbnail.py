@@ -42,6 +42,14 @@ class TestThumbnail:
         thumbnail.options.pop('viewport')
         assert thumbnail.options == thumbnail2.options
 
+    def test_mimetype(self):
+        thumbnail = Thumbnail('test.jpg', {'size': ['100', '100']})
+        assert thumbnail.get_mimetype() == 'image/jpeg'
+
+    def test_mimetype_unknown(self):
+        thumbnail = Thumbnail('test.foo', {'size': ['100', '100']})
+        assert thumbnail.get_mimetype() == 'application/octet-stream'
+
     def test_get_estimated_size(self):
         image = ImageModelFactory.create()
         thumbnail = Thumbnail(image.file.path, {'size': ['50', '50']})

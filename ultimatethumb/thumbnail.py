@@ -1,5 +1,6 @@
 import os
 from collections import OrderedDict, namedtuple
+from mimetypes import guess_type
 
 from barbeque.commands.imaging import GmConvertCommand
 from barbeque.files import MoveableNamedTemporaryFile
@@ -166,6 +167,10 @@ class Thumbnail(object):
 
     def exists(self, factor=1):
         return os.path.exists(self.get_storage_path(factor, generate=False))
+
+    def get_mimetype(self):
+        mimetype, encoding = guess_type(self.get_name())
+        return mimetype or 'application/octet-stream'
 
     def get_storage_url(self, factor=1):
         return thumbnail_storage.url(self.get_storage_name(factor))
