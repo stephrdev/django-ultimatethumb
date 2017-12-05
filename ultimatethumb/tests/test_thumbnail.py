@@ -79,6 +79,20 @@ class TestThumbnail:
         assert thumbnail.url_2x == (
             '/2x/821b6e68771352f0bc53acd8e8144972a56dd0ac/test.jpg')
 
+    def test_base64(self):
+        image = ImageModelFactory.create()
+        thumbnail = Thumbnail(image.file.path, {'size': ['2', '2']})
+
+        assert thumbnail.base64 == (
+            'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAMCAgMCAg'
+            'MDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8'
+            'XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQU'
+            'FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wAARCAACAAEDAREAAhEBAxEB/'
+            '8QAFAABAAAAAAAAAAAAAAAAAAAAB//EABQQAQAAAAAAAAAAAAAAAAAAAAD/xAAVAQ'
+            'EBAAAAAAAAAAAAAAAAAAAICf/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhE'
+            'DEQA/AHhPom3/2Q=='
+        )
+
     def test_requested_size(self):
         thumbnail = Thumbnail('test.jpg', {'size': ['100', '50']})
         assert thumbnail.requested_size.width == '100'
@@ -141,6 +155,11 @@ class TestThumbnail:
     def test_storage_name_factored(self):
         thumbnail = Thumbnail('test.jpg', {'size': ['100', '50']})
         assert thumbnail.get_storage_name(2) == os.path.join('2x', thumbnail.get_name())
+
+    def test_storage_name_override_suffix(self):
+        thumbnail = Thumbnail('test.jpg', {'size': ['100', '50']})
+        assert thumbnail.get_storage_name(suffix='foo') == (
+            '3cfbc9962355c42f448931e11442cb2c7341ec76/test.foo')
 
     def test_gm_options_crop(self):
         image = ImageModelFactory.create()
@@ -382,3 +401,21 @@ class TestThumbnail:
         viewport_size = instance.viewport
         assert viewport_size.width == expected[0], assert_error
         assert viewport_size.height == expected[1], assert_error
+
+    def test_base64_content(self):
+        image = ImageModelFactory.create()
+        thumbnail = Thumbnail(image.file.path, {'size': ['2', '2']})
+        assert thumbnail.get_base64_content() == (
+            '/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAMCAgMCAg'
+            'MDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8'
+            'XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQU'
+            'FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wAARCAACAAEDAREAAhEBAxEB/'
+            '8QAFAABAAAAAAAAAAAAAAAAAAAAB//EABQQAQAAAAAAAAAAAAAAAAAAAAD/xAAVAQ'
+            'EBAAAAAAAAAAAAAAAAAAAICf/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhE'
+            'DEQA/AHhPom3/2Q=='
+        )
+
+    def test_base64_path(self):
+        image = ImageModelFactory.create()
+        thumbnail = Thumbnail(image.file.path, {'size': ['50', '50']})
+        assert thumbnail.get_base64_path().endswith('.base64')

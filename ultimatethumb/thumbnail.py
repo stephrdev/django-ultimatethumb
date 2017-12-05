@@ -1,3 +1,4 @@
+import base64
 import os
 from collections import OrderedDict, namedtuple
 from mimetypes import guess_type
@@ -162,6 +163,13 @@ class Thumbnail(object):
         return build_url(self.get_name(), 2) if self.options['factor2x'] else None
 
     @property
+    def base64(self):
+        return 'data:{0};base64,{1}'.format(
+            self.get_mimetype(),
+            self.get_base64_content()
+        )
+
+    @property
     def requested_size(self):
         return Size(*self.options['size'])
 
@@ -231,10 +239,12 @@ class Thumbnail(object):
 
         return Size(int(round(thumb_width)), int(round(thumb_height)))
 
-    def get_storage_name(self, factor=1):
+    def get_storage_name(self, factor=1, suffix=None):
         name = self.get_name()
         if factor != 1:
             name = os.path.join('{0}x'.format(factor), name)
+        if suffix:
+            name = '{0}.{1}'.format(os.path.splitext(name)[0], suffix)
         return name
 
     def generate(self, factor=1):
@@ -292,3 +302,26 @@ class Thumbnail(object):
         gm_options['quality'] = self.options['quality']
 
         return gm_options
+
+    def get_base64_content(self):
+        with open(self.get_base64_path(), 'r') as b64image:
+            return b64image.read()
+
+    def get_base64_path(self, generate=True):
+        path = thumbnail_storage.path(self.get_storage_name(suffix='base64'))
+        if generate and not os.path.exists(path):
+            self.generate_base64()
+
+        return path
+
+    def generate_base64(self):
+        thumb_name = self.get_storage_name(suffix='base64')
+
+        tmpfile = MoveableNamedTemporaryFile(thumb_name)
+
+        with open(self.get_storage_path(), 'rb') as thumb_image:
+            tmpfile.file.write(base64.b64encode(thumb_image.read()))
+            tmpfile.file.flush()
+
+        thumbnail_storage.save(thumb_name, tmpfile)
+        return True
