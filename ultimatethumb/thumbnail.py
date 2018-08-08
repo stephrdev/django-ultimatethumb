@@ -41,20 +41,33 @@ Size = namedtuple('Size', ('width', 'height'))
 
 
 class ThumbnailSet(object):
+    """
+    A ThumbnailSet holds the source configuration and a number of thumbnails as requested.
+    """
 
     def __init__(self, source, sizes, options):
+        """
+        Takes a valid source and a list of requested sizes together with additional options.
+        """
         self.source = source
         self.sizes = sizes
         self.options = options
 
     @cached_property
     def thumbnails(self):
+        """
+        The thumbnails property returns a list of available thumbnails.
+        """
         return self.get_thumbnails()
 
     def get_source_size(self):
-        # If retina option is enabled, pretend that the source is half as large as
-        # it is. We do this to ensure that we have "retina" images which effectively
-        # are doubled in size. Doing this, we never have to upscale the image.
+        """
+        Returns the file size of the source.
+
+        If retina option is enabled, pretend that the source is half as large as
+        it is. We do this to ensure that we have "retina" images which effectively
+        are doubled in size. Doing this, we never have to upscale the image.
+        """
         source_size = get_size_for_path(self.source)
         if self.options.get('factor2x', True):
             source_size = int(source_size[0] / 2), int(source_size[1] / 2)
@@ -62,9 +75,17 @@ class ThumbnailSet(object):
         return source_size
 
     def get_sizes(self):
+        """
+        Parse the given sizes and return a list of size requests.
+        """
         return parse_sizes(self.sizes)
 
     def get_thumbnails(self):
+        """
+        Returns a list of thumbnails based on the requested sizes.
+        Some additional calculations are done to make sure we don't return thumbnails
+        larger than the source file is.
+        """
         thumbnails = []
         source_size = self.get_source_size()
 
@@ -104,8 +125,14 @@ class ThumbnailSet(object):
 
 
 class Thumbnail(object):
-
+    """
+    This object represents a single thumbnail.
+    """
     def __init__(self, source, opts):
+        """
+        Given a source and options, this method initializes the Thumbnail object.
+        Some validation on the provided options are done.
+        """
         self.source = source
 
         if 'size' not in opts:
@@ -128,9 +155,17 @@ class Thumbnail(object):
 
     @classmethod
     def from_name(cls, name):
+        """
+        Using a name, reconstruct a thumbnail object.
+        The name is actually a cache key which is used by get_thumb_data to fetch the
+        original thumbnail configuration.
+        """
         return Thumbnail(*get_thumb_data(name))
 
     def get_name(self):
+        """
+        Generate the thumbnail name for the current thumbnail configuration.
+        """
         return get_thumb_name(self.source, **dict(
             (option, value)
             for option, value in self.options.items()
@@ -139,10 +174,18 @@ class Thumbnail(object):
 
     @cached_property
     def size(self):
+        """
+        The size property returns the calculated, estimated thumbnail size without
+        actually generating the thumbnail image.
+        """
         return self.get_estimated_size()
 
     @cached_property
     def viewport(self):
+        """
+        Returns the valid viewport for this thumbnail, might be used in templates to
+        configure the source sets properly.
+        """
         viewport = self.options.get('viewport', None)
 
         if not viewport:
@@ -155,14 +198,23 @@ class Thumbnail(object):
 
     @property
     def url(self):
+        """
+        The url property is responsible for returning the acutal thumbnail url.
+        """
         return build_url(self.get_name())
 
     @property
     def url_2x(self):
+        """
+        Returns the retina url for the thumbnail if retina is enabled.
+        """
         return build_url(self.get_name(), 2) if self.options['factor2x'] else None
 
     @property
     def base64(self):
+        """
+        Returns the base64 representation of the thumbnail to use in a src attribute.
+        """
         return 'data:{0};base64,{1}'.format(
             self.get_mimetype(),
             self.get_base64_content()
@@ -170,28 +222,50 @@ class Thumbnail(object):
 
     @property
     def requested_size(self):
+        """
+        Returns the requested thumbnail size.
+        """
         return Size(*self.options['size'])
 
     def exists(self, factor=1):
+        """
+        Checks if the thumbnail already exists.
+        """
         return os.path.exists(self.get_storage_path(factor, generate=False))
 
     def get_mimetype(self):
+        """
+        Returns the mime type of the thumbnail based on the thumbnail file name.
+        """
         mimetype, encoding = guess_type(self.get_name())
         return mimetype or 'application/octet-stream'
 
     def get_storage_url(self, factor=1):
+        """
+        Returns the real url to use in the ultimatethumb view for returning the image.
+        """
         return thumbnail_storage.url(self.get_storage_name(factor))
 
     def get_storage_path(self, factor=1, generate=True):
+        """
+        Returns the storage path in filesystem of the thumbnail file.
+        """
         if generate and not self.exists(factor):
             self.generate(factor)
 
         return thumbnail_storage.path(self.get_storage_name(factor))
 
     def get_size(self, factor=1):
+        """
+        Returns the actual generated thumbnail image size.
+        """
         return Size(*get_size_for_path(self.get_storage_path(factor)))
 
     def get_estimated_size(self):
+        """
+        Calculates the estimated thumbnail image dimensions based on the source size
+        and the options provided.
+        """
         source_size = get_size_for_path(self.source)
         thumb_size = (self.options['size'][0], self.options['size'][1])
         source_width, source_height = source_size
@@ -239,6 +313,9 @@ class Thumbnail(object):
         return Size(int(round(thumb_width)), int(round(thumb_height)))
 
     def get_storage_name(self, factor=1, suffix=None):
+        """
+        Returns the name to use when storing the thumbnail to disk.
+        """
         name = self.get_name()
         if factor != 1:
             name = os.path.join('{0}x'.format(factor), name)
@@ -247,6 +324,10 @@ class Thumbnail(object):
         return name
 
     def generate(self, factor=1):
+        """
+        Genrate the thumbnail using Graphicsmagick and Pngquant (if enabled and
+        source image is a png file.
+        """
         thumb_name = self.get_storage_name(factor)
 
         tmpfile = MoveableNamedTemporaryFile(thumb_name)
@@ -267,6 +348,9 @@ class Thumbnail(object):
         return True
 
     def get_gm_options(self, factor=1):
+        """
+        Generates the option set dor Graphicsmagick to generate the thumbnail.
+        """
         gm_options = OrderedDict()
 
         # Remove any icc profiles to avoid problems.
@@ -303,10 +387,17 @@ class Thumbnail(object):
         return gm_options
 
     def get_base64_content(self):
+        """
+        Reads the base64 version of the thumbnail from disk and returns content.
+        """
         with open(self.get_base64_path(), 'r') as b64image:
             return b64image.read()
 
     def get_base64_path(self, generate=True):
+        """
+        Calculates the path of the base64 image version.
+        If path does not exist, base64 version is generated.
+        """
         path = thumbnail_storage.path(self.get_storage_name(suffix='base64'))
         if generate and not os.path.exists(path):
             self.generate_base64()
@@ -314,6 +405,9 @@ class Thumbnail(object):
         return path
 
     def generate_base64(self):
+        """
+        Generate the base64 representation from the generated thumbnail image file.
+        """
         thumb_name = self.get_storage_name(suffix='base64')
 
         tmpfile = MoveableNamedTemporaryFile(thumb_name)

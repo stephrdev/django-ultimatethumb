@@ -28,6 +28,10 @@ def get_cache_key(key):
 
 
 def get_thumb_name(source, **options):
+    """
+    Builds the thumbnail name and uses the name to store the source and options
+    to cache.
+    """
     source_name, source_ext = os.path.splitext(os.path.basename(source))
     data = OrderedDict()
     data['source'] = source
@@ -46,6 +50,9 @@ def get_thumb_name(source, **options):
 
 
 def get_thumb_data(thumb_name):
+    """
+    Uses the thumbail name and fetches the source and options from cache.
+    """
     cache_key = get_cache_key(thumb_name)
     serialized_data = cache.get(cache_key)
     if not serialized_data:
@@ -56,6 +63,11 @@ def get_thumb_data(thumb_name):
 
 
 def parse_source(source):
+    """
+    Parse and lookup the file system path for a given source.
+    The function understands both media names and static names
+    (if prefixed with "static:")
+    """
     if source.startswith('static:'):
         source = source[7:]
 
@@ -74,6 +86,9 @@ def parse_source(source):
 
 
 def parse_sizes(value):
+    """
+    Parses and returns a list of thumbnail sizes.
+    """
     sizes = value.split(',')
 
     parsed_sizes = []
@@ -93,6 +108,10 @@ def parse_sizes(value):
 
 
 def factor_size(value, factor):
+    """
+    Factors the given thumbnail size. Understands both absolute dimensions
+    and percentages.
+    """
     if type(value) is int:
         size = value * factor
         return str(size) if size else ''
@@ -117,6 +136,9 @@ def get_size_for_path(path):
 
 
 def get_domain_url(url):
+    """
+    Returns the given url prefixed with a domain if configured in settings.
+    """
     domain = getattr(settings, 'ULTIMATETHUMB_DOMAIN', '')
 
     if domain:
@@ -130,6 +152,9 @@ def get_domain_url(url):
 
 
 def build_url(name, factor=1):
+    """
+    Build the actual url for a given name and factor.
+    """
     if factor > 1:
         url = reverse('thumbnail-factor', kwargs={'factor': factor, 'name': name})
     else:

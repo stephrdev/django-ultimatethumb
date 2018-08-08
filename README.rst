@@ -57,6 +57,6 @@ Now you're ready to run the tests:
 Resources
 ---------
 
-* `Documentation <https://django-ultimatethumb.readthedocs.org/>`_
+* `Documentation <https://django-ultimatethumb.readthedocs.io/en/latest/>`_
 * `Bug Tracker <https://github.com/moccu/django-ultimatethumb/issues>`_
 * `Code <https://github.com/moccu/django-ultimatethumb/>`_

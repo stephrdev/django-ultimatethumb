@@ -3,6 +3,10 @@ from django.conf import settings
 
 
 class GraphicsmagickCommand(Command):
+    """
+    Command to call gm (Graphicsmagick) to generate thumbnails.
+    """
+
     required_parameters = ['infile', 'outfile']
 
     command = (
@@ -33,6 +37,10 @@ class GraphicsmagickCommand(Command):
 
 
 class PngquantCommand(Command):
+    """
+    Command to call pngquant to improve the file size of png files.
+    """
+
     ignore_output = True
     fail_silently = True
     required_parameters = ['pngfile', 'quality']

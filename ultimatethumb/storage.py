@@ -7,6 +7,12 @@ from .utils import get_domain_url
 
 
 class ThumbnailFileSystemStorage(FileSystemStorage):
+    """
+    Extended FileSystemStorage from Django which uses ULTIMATETHUMB_* settings
+    to initialize storage backend.
+
+    This storage is used to handle the generated files.
+    """
 
     def __init__(self, location=None, base_url=None, *args, **kwargs):
         if location is None:
@@ -25,6 +31,10 @@ class ThumbnailFileSystemStorage(FileSystemStorage):
 
 
 class ThumbnailStorage(LazyObject):
+    """
+    Lazy class to defer the initialization of the thumbnail_storage to give
+    settings a chance to override the used storage backend.
+    """
 
     def _setup(self):
         self._wrapped = get_storage_class(

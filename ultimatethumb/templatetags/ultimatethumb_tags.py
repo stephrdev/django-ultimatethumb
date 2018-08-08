@@ -23,6 +23,9 @@ def ultimatethumb(
     quality=None,
     pngquant=None
 ):
+    """
+    Main template tag to generate thumbnail sourcesets.
+    """
     source = parse_source(source)
 
     if not source:
