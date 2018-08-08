@@ -9,6 +9,9 @@ env:
   - DEPS="Django>=2.1,<2.2"
 
 install:
+install:
+  - sudo apt-get update -y
+  - sudo apt-get install graphicsmagick libjpeg-dev
   - pip install pipenv codecov
   - pipenv install --dev
   - pipenv run pip install -e .
