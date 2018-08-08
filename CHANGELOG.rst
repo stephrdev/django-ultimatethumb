@@ -1,6 +1,14 @@
 Changelog
 =========
 
+1.0.0 - 2018-08-08
+------------------
+
+* Removed barbeque dependency, now used python-command-executor
+* Dropped support for Django < 1.11
+* Dropped support for Python 2
+* Moved to pipenv based development
+
 0.8.0 - 2017-12-05
 ------------------
 
