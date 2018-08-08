@@ -1,11 +1,11 @@
 import os
+from unittest import mock
 
-import mock
 import pytest
 from django.core.cache import cache
 
+from tests.factories.mockapp import ImageModelFactory
 from ultimatethumb.storage import thumbnail_storage
-from ultimatethumb.tests.factories.mockapp import ImageModelFactory
 from ultimatethumb.thumbnail import Size, Thumbnail
 
 

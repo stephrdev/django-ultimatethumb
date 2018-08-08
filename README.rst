@@ -1,21 +1,21 @@
 django-ultimatethumb
-====================
+=======================
 
-.. image:: https://badge.fury.io/py/django-ultimatethumb.png
-    :target: http://badge.fury.io/py/django-ultimatethumb
+.. image:: https://img.shields.io/pypi/v/django-ultimatethumb.svg
+   :target: https://pypi.org/project/django-ultimatethumb/
+   :alt: Latest Version
 
-.. image:: https://travis-ci.org/moccu/django-ultimatethumb.svg?branch=master
-    :target: https://travis-ci.org/moccu/django-ultimatethumb
-
-.. image:: https://coveralls.io/repos/moccu/django-ultimatethumb/badge.svg
-    :target: https://coveralls.io/r/moccu/django-ultimatethumb
+.. image:: https://codecov.io/gh/moccu/django-ultimatethumb/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/moccu/django-ultimatethumb
+   :alt: Coverage Status
 
 .. image:: https://readthedocs.org/projects/django-ultimatethumb/badge/?version=latest
-    :target: https://readthedocs.org/projects/django-ultimatethumb/?badge=latest
+   :target: https://django-ultimatethumb.readthedocs.io/en/stable/?badge=latest
+   :alt: Documentation Status
 
+.. image:: https://travis-ci.org/moccu/django-ultimatethumb.svg?branch=master
+   :target: https://travis-ci.org/moccu/django-ultimatethumb
 
-What is django-ultimatethumb
-----------------------------
 
 `django-ultimatethumb` is another Django library for generating thumbnails but
 has some advantages:
@@ -29,123 +29,34 @@ has some advantages:
   multiple sources (e.g. with media queries).
 
 
-.. hint::
+Requirements
+------------
 
-    The documentation is still work in progress but the library is already in use
-    for a while now. We working hard on providing a better documentation!
-
-
-Quick start
------------
-
-To install `django-ultimatethumb` just use your preferred Python package installer::
-
-    $ pip install django-ultimatethumb
-
-Add some stuff  to your Django settings
-
-.. code-block:: python
-
-    INSTALLED_APPS = (
-        # some other apps
-        'ultimatethumb',
-    )
-
-    # This is the path where the generated thumbnail files are cached.
-    ULTIMATETHUMB_ROOT = '/filesystem/path/to/thumbnails/'
-    # This is the base url for your thumbnails
-    ULTIMATETHUMB_URL = '/thumbnails/'
-
-Next, add the `django-ultimatethumb` urls to your ``urls.py``
-
-.. code-block:: python
-
-    urlpatterns += patterns(
-        '',
-        url(
-            r'^{0}/'.format(settings.ULTIMATETHUMB_URL.strip('/')),
-            include('ultimatethumb.urls')
-        ),
-
-.. hint::
-
-    You can use the ``ULTIMATETHUMB_URL`` setting in your ``urls.py`` to make
-    sure that the urls are in sync.
-
-To use `django-ultimatethumb` in your templates, just load the templatetags and
-call the ``ultimatethumb`` tag with proper parameters:
-
-.. code-block:: html
-
-    {% load ultimatethumb_tags %}
-    {% ultimatethumb 'mythumb' mymodel.imagefield.name sizes='200x0,400x0' %}
-    <picture>
-    {% for source in mythumb %}
-        <source
-            srcset="{{ source.url_2x }} 2x, {{ source.url }} 1x"
-            {% if not forloop.last %}media="(max-width: {{ source.viewport.width }}px)"{% endif %}
-        />
-        {% if forloop.last %}<img src="{{ source.url }}" />{% endif %}
-    {% endfor %}
-    </picture>
-
-This gives you a full-featured picture tag including multiple sources with
-media queries for different browser sizes and also provides retina images.
-
-You can also use `django-ultimatethumb` in a much simpler way:
-
-.. code-block:: html
-
-    {% load ultimatethumb_tags %}
-    {% ultimatethumb 'mythumb' mymodel.imagefield.name sizes='400x0' %}
-    <img src="{{ mythumb.0.url }}" />
-
-To resize static images, just prefix the path with ``static:``, for example:
-
-.. code-block:: html
-
-    {% load ultimatethumb_tags %}
-    {% ultimatethumb 'mythumb' 'static:img/logo.jpg' sizes='400x0' %}
-    <img src="{{ mythumb.0.url }}" />
-
-There are many other options/parameters to pass to the templatetag. Please refer
-to the codebase until the documentation is more complete.
-
-You can also pass the viewport size in addition to the requested thumbnail size:
-
-.. code-block:: html
-
-    {% load ultimatethumb_tags %}
-    {% ultimatethumb 'mythumb' 'static:img/logo.jpg' sizes='400x0:600x0' %}
-    <img src="{{ mythumb.0.url }}" />
-
-This will set the `thumbnail.viewport.width` to 600.
-
-If you want so save some characters, you might short cut the sizes by leaving out
-the "x0" for the auto'ed dimesion.
-
-.. code-block:: html
-
-    {% load ultimatethumb_tags %}
-    {% ultimatethumb 'mythumb' 'static:img/logo.jpg' sizes='400:600' %}
-    <img src="{{ mythumb.0.url }}" />
-
-The sizes are now the same as if you would use sizes='400x0,600x0'.
+django-ultimatethumb supports Python 3 only and requires at least Django 1.11.
 
 
-Options
--------
+Prepare for development
+-----------------------
 
-You can pass some options to the thumbnail tag:
+A Python 3.6 interpreter is required in addition to pipenv.
 
-* upscale: Configures if the input should be upscaled if requested sizes are larger than source.
-* retina: Option to enable retina support (by providing both url and url_2x)
-* crop: Deside if images should be cropped if requested sizes doesn't fit source aspect ratio.
-* quality: Configures quality for image compression
-* pngquant: Configures the pngquant compression factor
+.. code-block:: shell
 
-.. hint::
+    $ pipenv install --python 3.6 --dev
+    $ pipenv shell
+    $ pip install -e .
 
-    The `crop` option can be set to True for default gravity when cropping (which is `Center`).
-    You can also pass valid GraphicsMagick gravities (North, NorthEeast, East, SouthEast, ...)
-    or their abbreviation (N, NE, E, SE, ...)
+
+Now you're ready to run the tests:
+
+.. code-block:: shell
+
+    $ pipenv run py.test
+
+
+Resources
+---------
+
+* `Documentation <https://django-ultimatethumb.readthedocs.org/>`_
+* `Bug Tracker <https://github.com/moccu/django-ultimatethumb/issues>`_
+* `Code <https://github.com/moccu/django-ultimatethumb/>`_

@@ -1,86 +1,40 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-import codecs
 import os
-import sys
+from codecs import open
 
-from setuptools import find_packages, setup
-
-
-version = '0.8.0'
+from setuptools import setup, find_packages
 
 
-if sys.argv[-1] == 'publish':
-    os.system('python setup.py sdist upload')
-    os.system('python setup.py bdist_wheel upload')
-    print('You probably want to also tag the version now:')
-    print('  git tag -a %s -m "version %s"' % (version, version))
-    print('  git push --tags')
-    sys.exit()
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+VERSION = __import__('ultimatethumb').__version__
 
 
-def read(*parts):
-    filename = os.path.join(os.path.dirname(__file__), *parts)
-    with codecs.open(filename, encoding='utf-8') as fp:
-        return fp.read()
-
-
-tests_require = [
-    'tox',
-    'tox-pyenv',
-    'coverage',
-    'mock',
-    'pytest',
-    'pytest-cov',
-    'pytest-pep8',
-    'pytest-flakes',
-    'pytest-isort',
-    'pytest-django',
-    'python-coveralls',
-    'factory-boy',
-]
+with open(os.path.join(BASE_DIR, 'README.rst'), encoding='utf-8') as f:
+    long_description = f.read()
 
 
 setup(
     name='django-ultimatethumb',
+    version=VERSION,
     description='Generate thumbnails of anything.',
-    long_description=read('README.rst'),
-    version=version,
-    license='BSD',
+    long_description=long_description,
+    url='https://github.com/moccu/django-ultimatethumb',
+    project_urls={
+        'Bug Reports': 'https://github.com/moccu/django-ultimatethumb/issues',
+        'Source': 'https://github.com/moccu/django-ultimatethumb',
+    },
     author='Moccu GmbH & Co. KG',
     author_email='info@moccu.com',
-    url='http://github.com/moccu/django-ultimatethumb/',
-    packages=find_packages(exclude=[
-        'ultimatethumb.tests',
-        'ultimatethumb.tests.factories',
-        'ultimatethumb.tests.resources',
-        'ultimatethumb.tests.resources.mockapp',
-    ]),
-    test_suite='.',
-    tests_require=tests_require,
-    install_requires=[
-        'Django>=1.8,<2.0',
-        'barbeque>=1.4',
-        'Pillow',
-    ],
-    extras_require={
-        'tests': tests_require,
-        'docs': ['sphinx'],
-    },
+    packages=find_packages(exclude=['tests', 'tests.*']),
+    install_requires=['Pillow', 'barbeque'],
+    include_package_data=True,
+    keywords='django thumbnails imaging',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
+        'Framework :: Django',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
-        'Operating System :: OS Independent',
-        'Programming Language :: Python',
-        'Topic :: Software Development :: Libraries :: Python Modules',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: Implementation :: CPython',
-        'Framework :: Django',
+        'Programming Language :: Python :: 3.6',
     ],
 )

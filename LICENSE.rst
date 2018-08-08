@@ -1,4 +1,4 @@
-Copyright 2016, Moccu GmbH & Co. KG, Kreativagentur für digitale Medien
+Copyright 2016-present, Moccu GmbH & Co. KG
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,

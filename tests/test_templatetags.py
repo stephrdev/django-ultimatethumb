@@ -3,7 +3,7 @@ import os
 import pytest
 from django.template import Context, Template
 
-from ultimatethumb.tests.factories.mockapp import ImageModelFactory
+from tests.factories.mockapp import ImageModelFactory
 
 
 @pytest.mark.django_db

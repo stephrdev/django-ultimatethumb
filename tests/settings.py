@@ -2,7 +2,7 @@ import os
 import tempfile
 
 
-DEBUG = TEMPLATE_DEBUG = True
+DEBUG = True
 
 SECRET_KEY = 'testing'
 
@@ -13,14 +13,21 @@ DATABASES = {
     }
 }
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+
     'ultimatethumb',
-    'ultimatethumb.tests.resources.mockapp',
-)
+    'tests.resources.mockapp',
+]
 
-MIDDLEWARE_CLASSES = []
+TEMPLATES = [{
+    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+    'APP_DIRS': True,
+    'DIRS': [os.path.join(os.path.dirname(__file__), 'templates')]
+}]
 
-ROOT_URLCONF = 'ultimatethumb.urls'
 
 MEDIA_ROOT = tempfile.mkdtemp()
 MEDIA_URL = '/media/'
@@ -33,8 +40,4 @@ STATIC_URL = '/static/'
 ULTIMATETHUMB_ROOT = tempfile.mkdtemp()
 ULTIMATETHUMB_URL = '/'
 
-TEMPLATES = [{
-    'BACKEND': 'django.template.backends.django.DjangoTemplates',
-    'DIRS': [],
-    'APP_DIRS': True,
-}]
+ROOT_URLCONF = 'ultimatethumb.urls'

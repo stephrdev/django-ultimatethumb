@@ -1,14 +1,20 @@
 language: python
 
 python:
-  - 2.7
-  - 3.4
-  - 3.5
+  - "3.6"
+
+env:
+  - DEPS="Django>=1.11,<1.12"
+  - DEPS="Django>=2.0,<2.1"
+  - DEPS="Django>=2.1,<2.2"
 
 install:
-  - sudo apt-get update -y
-  - sudo apt-get install graphicsmagick libjpeg-dev
-  - pip install tox-travis
+  - pip install pipenv codecov
+  - pipenv install --dev
+  - pipenv run pip install -e .
+  - pipenv run pip install $DEPS
 
-script:
-  - tox
+script: pipenv run py.test --cov
+
+after_success:
+  - codecov

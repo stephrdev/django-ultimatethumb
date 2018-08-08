@@ -1,37 +1,24 @@
-.PHONY: tests coverage coverage-html devinstall docs clean
-APP=.
-COV=ultimatethumb
-OPTS=
+.PHONY: clean tests cov docs release
 
-help:
-	@echo "tests - run all tests"
-	@echo "coverage - run all tests with coverage enabled"
-	@echo "coverage-html - run all tests with coverage html export enabled"
-	@echo "devinstall - install all packages required for development"
-	@echo "docs - generate Sphinx HTML documentation, including API docs"
-	@echo "clean - Clean build related files"
-
-tests:
-	py.test ${OPTS} ${APP}
-
-coverage:
-	py.test --cov=${COV} --cov-report=term-missing ${OPTS} ${APP}
-
-coverage-html:
-	py.test --cov=${COV} --cov-report=html ${OPTS} ${APP}
-
-devinstall:
-	pip install -e .
-	pip install -e .[docs]
-	pip install -e .[tests]
-
-docs: clean
-	$(MAKE) -C docs clean
-	$(MAKE) -C docs html
+VERSION = $(shell python -c "print(__import__('ultimatethumb').__version__)")
 
 clean:
-	rm -fr build/
-	rm -fr dist/
-	rm -fr *.egg-info
-	rm -fr htmlcov/
-	$(MAKE) -C docs clean
+	rm -fr docs/_build build/ dist/
+	pipenv run make -C docs clean
+
+tests:
+	pipenv run py.test --cov
+
+cov: tests
+	pipenv run coverage html
+	@echo open htmlcov/index.html
+
+docs:
+	pipenv run make -C docs linkcheck html
+	@echo open docs/_build/html/index.html
+
+release:
+	@echo About to release ${VERSION}; read
+	pipenv run python setup.py sdist upload
+	pipenv run python setup.py bdist_wheel upload
+	git tag -a "${VERSION}" -m "Version ${VERSION}" && git push --follow-tags

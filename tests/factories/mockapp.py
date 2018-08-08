@@ -1,6 +1,6 @@
 import factory
 
-from ultimatethumb.tests.resources.mockapp.models import ImageModel
+from tests.resources.mockapp.models import ImageModel
 
 
 class ImageModelFactory(factory.DjangoModelFactory):
