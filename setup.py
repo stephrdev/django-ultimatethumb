@@ -25,7 +25,7 @@ setup(
     author='Moccu GmbH & Co. KG',
     author_email='info@moccu.com',
     packages=find_packages(exclude=['tests', 'tests.*']),
-    install_requires=['Pillow', 'barbeque'],
+    install_requires=['Pillow', 'command-executor'],
     include_package_data=True,
     keywords='django thumbnails imaging',
     classifiers=[

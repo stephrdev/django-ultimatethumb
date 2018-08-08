@@ -1,10 +1,13 @@
+import os
 from unittest import mock
 
 import pytest
 from django.core.cache import cache
+from django.utils.encoding import force_bytes
 
 from ultimatethumb.utils import (
-    build_url, factor_size, get_cache_key, get_thumb_data, get_thumb_name, parse_sizes)
+    MoveableNamedTemporaryFile, build_url, factor_size, get_cache_key, get_thumb_data,
+    get_thumb_name, parse_sizes)
 
 
 def test_get_cache_key():
@@ -148,3 +151,30 @@ class TestBuildUrl:
         settings.ULTIMATETHUMB_DOMAIN = 'statichost'
         assert build_url('207736f753aeca1bdbc5ebd4d2e265d45194fc28/test.jpg') == (
             '//statichost/207736f753aeca1bdbc5ebd4d2e265d45194fc28/test.jpg')
+
+
+class TestMoveableNamedTemporaryFile:
+
+    def test_init(self):
+        tmp = MoveableNamedTemporaryFile('test.jpg')
+
+        assert tmp.name == 'test.jpg'
+
+        # Ensure file rights are set
+        assert os.stat(tmp.file.name).st_mode == 33188
+
+    def test_chunks(self):
+        tmp = MoveableNamedTemporaryFile('test.jpg')
+        tmp.file.write(force_bytes('test123'))
+        tmp.file.seek(0)
+        assert tmp.chunks() == force_bytes('test123')
+
+    def test_close(self):
+        tmp = MoveableNamedTemporaryFile('test.jpg')
+        tmp.close()
+        assert tmp.file.file.closed is True
+
+    def test_temporary_file_path(self):
+        tmp = MoveableNamedTemporaryFile('test.jpg')
+        assert tmp.temporary_file_path() == tmp.file.name
+        assert tmp.temporary_file_path().endswith('.jpg') is True

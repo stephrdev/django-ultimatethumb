@@ -15,9 +15,9 @@ sphinx = "*"
 sphinx-rtd-theme = "*"
 
 [packages]
-django = "<2"
+django = "*"
 Pillow = "*"
-barbeque = "*"
+command_executor = "*"
 
 [requires]
 python_version = "3.6"

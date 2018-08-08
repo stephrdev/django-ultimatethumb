@@ -3,15 +3,14 @@ import os
 from collections import OrderedDict, namedtuple
 from mimetypes import guess_type
 
-from barbeque.commands.imaging import GmConvertCommand
-from barbeque.files import MoveableNamedTemporaryFile
 from django.conf import settings
 from django.utils.functional import cached_property
 
-from .commands import PngquantCommand
+from .commands import GraphicsmagickCommand, PngquantCommand
 from .storage import thumbnail_storage
 from .utils import (
-    build_url, factor_size, get_size_for_path, get_thumb_data, get_thumb_name, parse_sizes)
+    MoveableNamedTemporaryFile, build_url, factor_size, get_size_for_path, get_thumb_data,
+    get_thumb_name, parse_sizes)
 
 
 CROP_GRAVITY = {
@@ -251,7 +250,7 @@ class Thumbnail(object):
         thumb_name = self.get_storage_name(factor)
 
         tmpfile = MoveableNamedTemporaryFile(thumb_name)
-        resizer = GmConvertCommand(
+        resizer = GraphicsmagickCommand(
             infile=self.source,
             outfile=tmpfile.temporary_file_path(),
             options=self.get_gm_options(factor)

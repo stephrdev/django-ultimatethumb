@@ -2,6 +2,8 @@ import hashlib
 import json
 import os
 import re
+import stat
+import tempfile
 from collections import OrderedDict
 
 from django.conf import settings
@@ -9,7 +11,7 @@ from django.contrib.staticfiles.finders import find
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.core.cache import cache
 from django.core.files.storage import default_storage
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils.encoding import force_bytes
 from django.utils.six.moves.urllib import parse as urlparse
 from PIL import Image as PILImage
@@ -134,3 +136,24 @@ def build_url(name, factor=1):
         url = reverse('thumbnail', kwargs={'name': name})
 
     return get_domain_url(url)
+
+
+class MoveableNamedTemporaryFile(object):
+
+    def __init__(self, name):
+        suffix = os.path.splitext(os.path.basename(name))[1]
+        self.file = tempfile.NamedTemporaryFile(suffix=suffix, delete=False)
+
+        perms = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH
+
+        os.chmod(self.file.name, perms)
+        self.name = name
+
+    def chunks(self):
+        return self.file.read()
+
+    def close(self):
+        return self.file.close()
+
+    def temporary_file_path(self):
+        return self.file.name
