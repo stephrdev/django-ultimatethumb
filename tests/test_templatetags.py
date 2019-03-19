@@ -1,6 +1,7 @@
 import os
 
 import pytest
+from django.core import management
 from django.template import Context, Template
 
 from tests.factories.mockapp import ImageModelFactory
@@ -44,6 +45,23 @@ class TestUltimatethumbTags:
 
         assert context['img'][0].source == os.path.join(
             settings.STATICFILES_DIRS[0], '50x50-placeholder.png')
+
+    def test_static_hashed_source(self, settings):
+        settings.INSTALLED_APPS += ('django.contrib.staticfiles',)
+        settings.STATICFILES_STORAGE = (
+            'django.contrib.staticfiles.storage.ManifestStaticFilesStorage')
+        management.call_command('collectstatic', '--noinput')
+
+        template = Template((
+            '{%% load ultimatethumb_tags %%}'
+            '{%% ultimatethumb "img" "%s" sizes="100x0" %%}'
+        ) % 'static:50x50-placeholder.png')
+
+        context = Context()
+        assert template.render(context) == ''
+
+        assert context['img'][0].source == os.path.join(
+            settings.STATIC_ROOT, '50x50-placeholder.67f77cb8aae8.png')
 
     def test_path_source(self, settings):
         source = ImageModelFactory.create()

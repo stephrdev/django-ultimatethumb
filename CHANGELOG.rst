@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.1.0 - 2019-03-19
+------------------
+
+* Improve performance when using static files as source (use stored_name instead
+  of hashed_name to get the path)
+
 1.0.0 - 2018-08-08
 ------------------
 

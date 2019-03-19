@@ -35,6 +35,7 @@ MEDIA_URL = '/media/'
 STATICFILES_DIRS = [
     os.path.join(os.path.dirname(__file__), 'resources', 'static'),
 ]
+STATIC_ROOT = tempfile.mkdtemp()
 STATIC_URL = '/static/'
 
 ULTIMATETHUMB_ROOT = tempfile.mkdtemp()

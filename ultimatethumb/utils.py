@@ -74,7 +74,13 @@ def parse_source(source):
         # Don't hash if in debug mode. This will also fail hard if the
         # staticfiles storage doesn't support hashing of filenames.
         if not settings.DEBUG:
-            source = staticfiles_storage.hashed_name(source)
+            # We always should have used stored_name because hashed_name
+            # calculates the name on the fly. For backwards compatibility we
+            # try to use stored_name but fall back to hashed_name.
+            if hasattr(staticfiles_storage, 'stored_name'):
+                source = staticfiles_storage.stored_name(source)
+            else:
+                source = staticfiles_storage.hashed_name(source)
             source = staticfiles_storage.path(source)
         else:
             source = find(source)
