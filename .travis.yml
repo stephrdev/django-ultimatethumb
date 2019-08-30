@@ -5,10 +5,9 @@ python:
 
 env:
   - DEPS="Django>=1.11,<1.12"
-  - DEPS="Django>=2.0,<2.1"
   - DEPS="Django>=2.1,<2.2"
+  - DEPS="Django>=2.2,<2.3"
 
-install:
 install:
   - sudo apt-get update -y
   - sudo apt-get install graphicsmagick libjpeg-dev
