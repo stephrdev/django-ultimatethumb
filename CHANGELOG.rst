@@ -1,6 +1,14 @@
 Changelog
 =========
 
+1.2.0 - 2021-09-28
+------------------
+
+* Added support for Django 3.0, 3.1, 3.2
+* Dropped support for Django < 2.2
+* Added Black formatting
+* Moved to poetry
+
 1.1.0 - 2019-03-19
 ------------------
 
