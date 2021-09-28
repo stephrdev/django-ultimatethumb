@@ -4,7 +4,6 @@ from ultimatethumb.commands import GraphicsmagickCommand, PngquantCommand
 
 
 class TestGraphicsmagickCommand:
-
     def test_get_command(self):
         options = OrderedDict()
         options['trueflag'] = True
@@ -19,8 +18,9 @@ class TestGraphicsmagickCommand:
             'in.jpg',
             '-trueflag',
             '+falseflag',
-            '-valueflag', 'somevalue',
-            'out.jpg'
+            '-valueflag',
+            'somevalue',
+            'out.jpg',
         ]
 
 
@@ -31,7 +31,9 @@ class TestPngquantCommand:
         assert cmd.get_command() == [
             'pngquant',
             '-f',
-            '--ext', '.png',
-            '--quality', '75-90',
-            'in.png'
+            '--ext',
+            '.png',
+            '--quality',
+            '75-90',
+            'in.png',
         ]

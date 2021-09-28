@@ -11,10 +11,10 @@ from tests.factories.mockapp import ImageModelFactory
 class TestUltimatethumbTags:
     def test_no_source(self, settings):
         settings.DEBUG = True
-        template = Template((
-            '{%% load ultimatethumb_tags %%}'
-            '{%% ultimatethumb "img" "%s" sizes="100x0" %%}'
-        ) % 'static:notexist.file')
+        template = Template(
+            ('{%% load ultimatethumb_tags %%}' '{%% ultimatethumb "img" "%s" sizes="100x0" %%}')
+            % 'static:notexist.file'
+        )
 
         context = Context()
         assert template.render(context) == ''
@@ -23,10 +23,10 @@ class TestUltimatethumbTags:
 
     def test_invalid_source(self, settings):
         settings.DEBUG = True
-        template = Template((
-            '{%% load ultimatethumb_tags %%}'
-            '{%% ultimatethumb "img" "%s" sizes="100x0" %%}'
-        ) % 'static:test.txt')
+        template = Template(
+            ('{%% load ultimatethumb_tags %%}' '{%% ultimatethumb "img" "%s" sizes="100x0" %%}')
+            % 'static:test.txt'
+        )
 
         context = Context()
         assert template.render(context) == ''
@@ -35,69 +35,73 @@ class TestUltimatethumbTags:
 
     def test_static_source(self, settings):
         settings.DEBUG = True
-        template = Template((
-            '{%% load ultimatethumb_tags %%}'
-            '{%% ultimatethumb "img" "%s" sizes="100x0" %%}'
-        ) % 'static:50x50-placeholder.png')
+        template = Template(
+            ('{%% load ultimatethumb_tags %%}' '{%% ultimatethumb "img" "%s" sizes="100x0" %%}')
+            % 'static:50x50-placeholder.png'
+        )
 
         context = Context()
         assert template.render(context) == ''
 
         assert context['img'][0].source == os.path.join(
-            settings.STATICFILES_DIRS[0], '50x50-placeholder.png')
+            settings.STATICFILES_DIRS[0], '50x50-placeholder.png'
+        )
 
     def test_static_hashed_source(self, settings):
         settings.INSTALLED_APPS += ('django.contrib.staticfiles',)
         settings.STATICFILES_STORAGE = (
-            'django.contrib.staticfiles.storage.ManifestStaticFilesStorage')
+            'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+        )
         management.call_command('collectstatic', '--noinput')
 
-        template = Template((
-            '{%% load ultimatethumb_tags %%}'
-            '{%% ultimatethumb "img" "%s" sizes="100x0" %%}'
-        ) % 'static:50x50-placeholder.png')
+        template = Template(
+            ('{%% load ultimatethumb_tags %%}' '{%% ultimatethumb "img" "%s" sizes="100x0" %%}')
+            % 'static:50x50-placeholder.png'
+        )
 
         context = Context()
         assert template.render(context) == ''
 
         assert context['img'][0].source == os.path.join(
-            settings.STATIC_ROOT, '50x50-placeholder.67f77cb8aae8.png')
+            settings.STATIC_ROOT, '50x50-placeholder.67f77cb8aae8.png'
+        )
 
     def test_path_source(self, settings):
         source = ImageModelFactory.create()
 
-        template = Template((
-            '{%% load ultimatethumb_tags %%}'
-            '{%% ultimatethumb "img" "%s" sizes="100x0" %%}'
-        ) % source.file.path)
+        template = Template(
+            ('{%% load ultimatethumb_tags %%}' '{%% ultimatethumb "img" "%s" sizes="100x0" %%}')
+            % source.file.path
+        )
 
         context = Context()
         assert template.render(context) == ''
 
-        assert context['img'][0].source == os.path.join(
-            settings.MEDIA_ROOT, source.file.name)
+        assert context['img'][0].source == os.path.join(settings.MEDIA_ROOT, source.file.name)
 
     def test_media_source(self, settings):
         source = ImageModelFactory.create()
 
-        template = Template((
-            '{%% load ultimatethumb_tags %%}'
-            '{%% ultimatethumb "img" "%s" sizes="100x0" %%}'
-        ) % source.file.name)
+        template = Template(
+            ('{%% load ultimatethumb_tags %%}' '{%% ultimatethumb "img" "%s" sizes="100x0" %%}')
+            % source.file.name
+        )
 
         context = Context()
         assert template.render(context) == ''
 
-        assert context['img'][0].source == os.path.join(
-            settings.MEDIA_ROOT, source.file.name)
+        assert context['img'][0].source == os.path.join(settings.MEDIA_ROOT, source.file.name)
 
     def test_crop(self):
         source = ImageModelFactory.create(file__width=210, file__height=100)
 
-        template = Template((
-            '{%% load ultimatethumb_tags %%}'
-            '{%% ultimatethumb "img" "%s" sizes="200x0" crop=True %%}'
-        ) % source.file.path)
+        template = Template(
+            (
+                '{%% load ultimatethumb_tags %%}'
+                '{%% ultimatethumb "img" "%s" sizes="200x0" crop=True %%}'
+            )
+            % source.file.path
+        )
 
         context = Context()
         assert template.render(context) == ''
@@ -109,10 +113,13 @@ class TestUltimatethumbTags:
     def test_quality(self):
         source = ImageModelFactory.create(file__width=210, file__height=100)
 
-        template = Template((
-            '{%% load ultimatethumb_tags %%}'
-            '{%% ultimatethumb "img" "%s" sizes="200x0" quality=10 %%}'
-        ) % source.file.path)
+        template = Template(
+            (
+                '{%% load ultimatethumb_tags %%}'
+                '{%% ultimatethumb "img" "%s" sizes="200x0" quality=10 %%}'
+            )
+            % source.file.path
+        )
 
         context = Context()
         assert template.render(context) == ''
@@ -124,10 +131,13 @@ class TestUltimatethumbTags:
     def test_pngquant(self):
         source = ImageModelFactory.create(file__width=210, file__height=100)
 
-        template = Template((
-            '{%% load ultimatethumb_tags %%}'
-            '{%% ultimatethumb "img" "%s" sizes="200x0" pngquant=10 %%}'
-        ) % source.file.path)
+        template = Template(
+            (
+                '{%% load ultimatethumb_tags %%}'
+                '{%% ultimatethumb "img" "%s" sizes="200x0" pngquant=10 %%}'
+            )
+            % source.file.path
+        )
 
         context = Context()
         assert template.render(context) == ''
@@ -139,10 +149,13 @@ class TestUltimatethumbTags:
     def test_viewport(self):
         source = ImageModelFactory.create(file__width=400, file__height=100)
 
-        template = Template((
-            '{%% load ultimatethumb_tags %%}'
-            '{%% ultimatethumb "img" "%s" sizes="200:600" %%}'
-        ) % source.file.path)
+        template = Template(
+            (
+                '{%% load ultimatethumb_tags %%}'
+                '{%% ultimatethumb "img" "%s" sizes="200:600" %%}'
+            )
+            % source.file.path
+        )
 
         context = Context()
         assert template.render(context) == ''
@@ -155,10 +168,13 @@ class TestUltimatethumbTags:
     def test_oversize(self):
         source = ImageModelFactory.create(file__width=210, file__height=100)
 
-        template = Template((
-            '{%% load ultimatethumb_tags %%}'
-            '{%% ultimatethumb "img" "%s" sizes="100x0,200x0,300x0,400x0" retina=False %%}'
-        ) % source.file.path)
+        template = Template(
+            (
+                '{%% load ultimatethumb_tags %%}'
+                '{%% ultimatethumb "img" "%s" sizes="100x0,200x0,300x0,400x0" retina=False %%}'
+            )
+            % source.file.path
+        )
 
         context = Context()
         assert template.render(context) == ''
@@ -175,10 +191,13 @@ class TestUltimatethumbTags:
     def test_oversize_upscale(self):
         source = ImageModelFactory.create(file__width=210, file__height=100)
 
-        template = Template((
-            '{%% load ultimatethumb_tags %%}'
-            '{%% ultimatethumb "img" "%s" sizes="100x0,200x0,300x0,400x0" upscale=True %%}'
-        ) % source.file.path)
+        template = Template(
+            (
+                '{%% load ultimatethumb_tags %%}'
+                '{%% ultimatethumb "img" "%s" sizes="100x0,200x0,300x0,400x0" upscale=True %%}'
+            )
+            % source.file.path
+        )
 
         context = Context()
         assert template.render(context) == ''
@@ -197,10 +216,13 @@ class TestUltimatethumbTags:
     def test_oversize_exact(self):
         source = ImageModelFactory.create(file__width=210, file__height=100)
 
-        template = Template((
-            '{%% load ultimatethumb_tags %%}'
-            '{%% ultimatethumb "img" "%s" sizes="100x20,200x20,300x20,400x20" retina=False %%}'
-        ) % source.file.path)
+        template = Template(
+            (
+                '{%% load ultimatethumb_tags %%}'
+                '{%% ultimatethumb "img" "%s" sizes="100x20,200x20,300x20,400x20" retina=False %%}'
+            )
+            % source.file.path
+        )
 
         context = Context()
         assert template.render(context) == ''
@@ -217,11 +239,14 @@ class TestUltimatethumbTags:
     def test_oversize_exact_crop(self):
         source = ImageModelFactory.create(file__width=210, file__height=100)
 
-        template = Template((
-            '{%% load ultimatethumb_tags %%}'
-            '{%% ultimatethumb "img" "%s" sizes="100x20,200x20,300x20,400x20" '
-            'crop=True retina=False %%}'
-        ) % source.file.path)
+        template = Template(
+            (
+                '{%% load ultimatethumb_tags %%}'
+                '{%% ultimatethumb "img" "%s" sizes="100x20,200x20,300x20,400x20" '
+                'crop=True retina=False %%}'
+            )
+            % source.file.path
+        )
 
         context = Context()
         assert template.render(context) == ''
@@ -238,10 +263,13 @@ class TestUltimatethumbTags:
     def test_oversize_exact_cross_aspect(self):
         source = ImageModelFactory.create(file__width=210, file__height=420)
 
-        template = Template((
-            '{%% load ultimatethumb_tags %%}'
-            '{%% ultimatethumb "img" "%s" sizes="100x20,200x20,300x20,400x20" retina=False %%}'
-        ) % source.file.path)
+        template = Template(
+            (
+                '{%% load ultimatethumb_tags %%}'
+                '{%% ultimatethumb "img" "%s" sizes="100x20,200x20,300x20,400x20" retina=False %%}'
+            )
+            % source.file.path
+        )
 
         context = Context()
         assert template.render(context) == ''
@@ -258,11 +286,14 @@ class TestUltimatethumbTags:
     def test_oversize_exact_crop_cross_aspect(self):
         source = ImageModelFactory.create(file__width=210, file__height=420)
 
-        template = Template((
-            '{%% load ultimatethumb_tags %%}'
-            '{%% ultimatethumb "img" "%s" sizes="100x20,200x20,300x20,400x20" '
-            'crop=True retina=False %%}'
-        ) % source.file.path)
+        template = Template(
+            (
+                '{%% load ultimatethumb_tags %%}'
+                '{%% ultimatethumb "img" "%s" sizes="100x20,200x20,300x20,400x20" '
+                'crop=True retina=False %%}'
+            )
+            % source.file.path
+        )
 
         context = Context()
         assert template.render(context) == ''
@@ -279,10 +310,13 @@ class TestUltimatethumbTags:
     def test_retina(self):
         source = ImageModelFactory.create(file__width=210, file__height=100)
 
-        template = Template((
-            '{%% load ultimatethumb_tags %%}'
-            '{%% ultimatethumb "img" "%s" sizes="100x0,200x0,300x0,400x0" %%}'
-        ) % source.file.path)
+        template = Template(
+            (
+                '{%% load ultimatethumb_tags %%}'
+                '{%% ultimatethumb "img" "%s" sizes="100x0,200x0,300x0,400x0" %%}'
+            )
+            % source.file.path
+        )
 
         context = Context()
         assert template.render(context) == ''
@@ -301,10 +335,13 @@ class TestUltimatethumbTags:
     def test_retina_disabled(self):
         source = ImageModelFactory.create(file__width=210, file__height=100)
 
-        template = Template((
-            '{%% load ultimatethumb_tags %%}'
-            '{%% ultimatethumb "img" "%s" sizes="100x0,200x0,300x0,400x0" retina=False %%}'
-        ) % source.file.path)
+        template = Template(
+            (
+                '{%% load ultimatethumb_tags %%}'
+                '{%% ultimatethumb "img" "%s" sizes="100x0,200x0,300x0,400x0" retina=False %%}'
+            )
+            % source.file.path
+        )
 
         context = Context()
         assert template.render(context) == ''

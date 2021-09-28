@@ -23,9 +23,12 @@ class TestThumbnailView:
         assert 'X-Accel-Redirect' not in response
 
     def test_get_invalid(self, client):
-        response = client.get(reverse('thumbnail', kwargs={
-            'name': 'testtesttesttesttesttesttesttesttesttest/foobar.jpg'
-        }))
+        response = client.get(
+            reverse(
+                'thumbnail',
+                kwargs={'name': 'testtesttesttesttesttesttesttesttesttest/foobar.jpg'},
+            )
+        )
         assert response.status_code == 404
 
     def test_get_x_accel_redirect(self, client, settings):
@@ -43,8 +46,7 @@ class TestThumbnailView:
         thumbnail_storage._setup()
         assert self.thumbnail.get_storage_url().startswith('//statichost')
         assert response.status_code == 200
-        assert response['X-Accel-Redirect'].startswith(
-            '/{0}'.format(self.thumbnail.get_name()))
+        assert response['X-Accel-Redirect'].startswith('/{0}'.format(self.thumbnail.get_name()))
 
         settings.ULTIMATETHUMB_DOMAIN = ''
         thumbnail_storage._setup()
@@ -56,7 +58,6 @@ class TestThumbnailView:
         assert response.status_code == 200
 
         response2 = client.get(
-            self.thumbnail.url,
-            HTTP_IF_MODIFIED_SINCE=response['Last-Modified']
+            self.thumbnail.url, HTTP_IF_MODIFIED_SINCE=response['Last-Modified']
         )
         assert response2.status_code == 304

@@ -9,13 +9,7 @@ class GraphicsmagickCommand(Command):
 
     required_parameters = ['infile', 'outfile']
 
-    command = (
-        '{GM_BIN}'
-        ' convert'
-        ' "{infile}"'
-        ' {options}'
-        ' "{outfile}"'
-    )
+    command = '{GM_BIN}' ' convert' ' "{infile}"' ' {options}' ' "{outfile}"'
 
     def get_parameters(self):
         GM_BIN = getattr(settings, 'ULTIMATETHUMB_GRAPHICSMAGICK_BINARY', 'gm')
@@ -26,13 +20,15 @@ class GraphicsmagickCommand(Command):
             'GM_BIN': GM_BIN,
             'infile': self.parameters['infile'],
             'outfile': self.parameters['outfile'],
-            'options': ' '.join([
-                '{0}{1}'.format(
-                    key if key[0] == '+' else '-{0}'.format(key),
-                    '' if value is True else ' {0}'.format(value)
-                )
-                for key, value in options.items()
-            ])
+            'options': ' '.join(
+                [
+                    '{0}{1}'.format(
+                        key if key[0] == '+' else '-{0}'.format(key),
+                        '' if value is True else ' {0}'.format(value),
+                    )
+                    for key, value in options.items()
+                ]
+            ),
         }
 
 
@@ -45,13 +41,7 @@ class PngquantCommand(Command):
     fail_silently = True
     required_parameters = ['pngfile', 'quality']
 
-    command = (
-        '{PNGQUANT_BIN}'
-        ' -f'
-        ' --ext .png'
-        ' --quality {quality}'
-        ' "{pngfile}"'
-    )
+    command = '{PNGQUANT_BIN}' ' -f' ' --ext .png' ' --quality {quality}' ' "{pngfile}"'
 
     def get_parameters(self):
         PNGQUANT_BIN = getattr(settings, 'ULTIMATETHUMB_PNGQUANT_BINARY', 'pngquant')

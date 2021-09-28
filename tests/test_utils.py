@@ -6,8 +6,14 @@ from django.core.cache import cache
 from django.utils.encoding import force_bytes
 
 from ultimatethumb.utils import (
-    MoveableNamedTemporaryFile, build_url, factor_size, get_cache_key, get_thumb_data,
-    get_thumb_name, parse_sizes)
+    MoveableNamedTemporaryFile,
+    build_url,
+    factor_size,
+    get_cache_key,
+    get_thumb_data,
+    get_thumb_name,
+    parse_sizes,
+)
 
 
 def test_get_cache_key():
@@ -23,7 +29,8 @@ class TestGetThumbName:
 
     def test_call(self):
         assert get_thumb_name('test.jpg', arg1=1, arg2=2) == (
-            '207736f753aeca1bdbc5ebd4d2e265d45194fc28/test.jpg')
+            '207736f753aeca1bdbc5ebd4d2e265d45194fc28/test.jpg'
+        )
 
     def test_call_option_ordering(self):
         result1 = get_thumb_name('test.jpg', arg1=1, arg2=2)
@@ -69,15 +76,16 @@ class TestParseSizes:
 
     def test_valid_multiple(self):
         assert parse_sizes('400x100,0x250,50%x0') == [
-            ['400', '100'], ['0', '250'], ['50%', '0']]
+            ['400', '100'],
+            ['0', '250'],
+            ['50%', '0'],
+        ]
 
     def test_valid_short(self):
-        assert parse_sizes('400,250,50%') == [
-            ['400', '0'], ['250', '0'], ['50%', '0']]
+        assert parse_sizes('400,250,50%') == [['400', '0'], ['250', '0'], ['50%', '0']]
 
     def test_valid_mixed(self):
-        assert parse_sizes('400x100,250,0x50%') == [
-            ['400', '100'], ['250', '0'], ['0', '50%']]
+        assert parse_sizes('400x100,250,0x50%') == [['400', '100'], ['250', '0'], ['0', '50%']]
 
     def test_invalid(self):
         with pytest.raises(ValueError):
@@ -94,19 +102,22 @@ class TestParseSizes:
         assert parse_sizes('400x100:300x100,0x250:0x500,50%x0:1000x0') == [
             ['400', '100', '300', '100'],
             ['0', '250', '0', '500'],
-            ['50%', '0', '1000', '0']
+            ['50%', '0', '1000', '0'],
         ]
 
     def test_valid_short_with_viewport(self):
         assert parse_sizes('400:600,250:500,50%:200') == [
             ['400', '0', '600', '0'],
             ['250', '0', '500', '0'],
-            ['50%', '0', '200', '0']
+            ['50%', '0', '200', '0'],
         ]
 
     def test_valid_mixed_with_viewport(self):
         assert parse_sizes('400x100:600,250,0x50%:200x500') == [
-            ['400', '100', '600', '0'], ['250', '0'], ['0', '50%', '200', '500']]
+            ['400', '100', '600', '0'],
+            ['250', '0'],
+            ['0', '50%', '200', '500'],
+        ]
 
     def test_invalid_viewport(self):
         with pytest.raises(ValueError):
@@ -131,30 +142,34 @@ class TestFactorSize:
 class TestBuildUrl:
     def test_no_factor(self):
         assert build_url('207736f753aeca1bdbc5ebd4d2e265d45194fc28/test.jpg') == (
-            '/207736f753aeca1bdbc5ebd4d2e265d45194fc28/test.jpg')
+            '/207736f753aeca1bdbc5ebd4d2e265d45194fc28/test.jpg'
+        )
 
     def test_with_factor(self):
         assert build_url('207736f753aeca1bdbc5ebd4d2e265d45194fc28/test.jpg', 2) == (
-            '/2x/207736f753aeca1bdbc5ebd4d2e265d45194fc28/test.jpg')
+            '/2x/207736f753aeca1bdbc5ebd4d2e265d45194fc28/test.jpg'
+        )
 
     def test_domain_with_scheme(self, settings):
         settings.ULTIMATETHUMB_DOMAIN = 'http://statichost'
         assert build_url('207736f753aeca1bdbc5ebd4d2e265d45194fc28/test.jpg') == (
-            'http://statichost/207736f753aeca1bdbc5ebd4d2e265d45194fc28/test.jpg')
+            'http://statichost/207736f753aeca1bdbc5ebd4d2e265d45194fc28/test.jpg'
+        )
 
     def test_domain_no_scheme(self, settings):
         settings.ULTIMATETHUMB_DOMAIN = '//statichost'
         assert build_url('207736f753aeca1bdbc5ebd4d2e265d45194fc28/test.jpg') == (
-            '//statichost/207736f753aeca1bdbc5ebd4d2e265d45194fc28/test.jpg')
+            '//statichost/207736f753aeca1bdbc5ebd4d2e265d45194fc28/test.jpg'
+        )
 
     def test_domain_missing_scheme(self, settings):
         settings.ULTIMATETHUMB_DOMAIN = 'statichost'
         assert build_url('207736f753aeca1bdbc5ebd4d2e265d45194fc28/test.jpg') == (
-            '//statichost/207736f753aeca1bdbc5ebd4d2e265d45194fc28/test.jpg')
+            '//statichost/207736f753aeca1bdbc5ebd4d2e265d45194fc28/test.jpg'
+        )
 
 
 class TestMoveableNamedTemporaryFile:
-
     def test_init(self):
         tmp = MoveableNamedTemporaryFile('test.jpg')
 

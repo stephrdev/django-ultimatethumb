@@ -5,6 +5,7 @@ import re
 import stat
 import tempfile
 from collections import OrderedDict
+from urllib.parse import urljoin, urlparse
 
 from django.conf import settings
 from django.contrib.staticfiles.finders import find
@@ -13,9 +14,7 @@ from django.core.cache import cache
 from django.core.files.storage import default_storage
 from django.urls import reverse
 from django.utils.encoding import force_bytes
-from django.utils.six.moves.urllib import parse as urlparse
 from PIL import Image as PILImage
-
 
 SIZE_RE = re.compile(r'^(\d+%?)(?:x(\d+%?))?(?:\:(\d+)(?:x(\d+))?)?$')
 
@@ -148,13 +147,13 @@ def get_domain_url(url):
     domain = getattr(settings, 'ULTIMATETHUMB_DOMAIN', '')
 
     if domain:
-        parsed_domain = urlparse.urlparse(domain)
+        parsed_domain = urlparse(domain)
         # If the domain has no scheme, prepend slashes to make sure the url is
         # correctly joined.
         if not parsed_domain.netloc and parsed_domain.path:
             domain = '//{0}'.format(domain)
 
-    return urlparse.urljoin(domain, url)
+    return urljoin(domain, url)
 
 
 def build_url(name, factor=1):
@@ -170,7 +169,6 @@ def build_url(name, factor=1):
 
 
 class MoveableNamedTemporaryFile(object):
-
     def __init__(self, name):
         suffix = os.path.splitext(os.path.basename(name))[1]
         self.file = tempfile.NamedTemporaryFile(suffix=suffix, delete=False)

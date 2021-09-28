@@ -35,6 +35,7 @@ class TestThumbnailFileSystemStorage:
         settings.ULTIMATETHUMB_URL = '/url/to/settingsthumbs/'
 
         storage = ThumbnailFileSystemStorage(
-            location='/path/to/thumbs/', base_url='/url/to/thumbs/')
+            location='/path/to/thumbs/', base_url='/url/to/thumbs/'
+        )
         assert storage.path('test.test') == '/path/to/thumbs/test.test'
         assert storage.url('test.test') == '/url/to/thumbs/test.test'

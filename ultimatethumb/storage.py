@@ -27,7 +27,8 @@ class ThumbnailFileSystemStorage(FileSystemStorage):
             raise ImproperlyConfigured('ULTIMATETHUMB_URL not set.')
 
         super(ThumbnailFileSystemStorage, self).__init__(
-            location, get_domain_url(base_url), *args, **kwargs)
+            location, get_domain_url(base_url), *args, **kwargs
+        )
 
 
 class ThumbnailStorage(LazyObject):
@@ -41,8 +42,9 @@ class ThumbnailStorage(LazyObject):
             getattr(
                 settings,
                 'ULTIMATETHUMB_STORAGE',
-                'ultimatethumb.storage.ThumbnailFileSystemStorage'
+                'ultimatethumb.storage.ThumbnailFileSystemStorage',
             )
         )()
+
 
 thumbnail_storage = ThumbnailStorage()

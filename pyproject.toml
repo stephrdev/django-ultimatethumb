@@ -63,6 +63,9 @@ skip-numeric-underscore-normalization = true
 include = "\\.pyi?$"
 exclude = "/(\\.git|\\.tox|build|dist)/"
 
+[tool.isort]
+profile = "black"
+
 [tool.coverage.run]
 branch = true
 source = ["ultimatethumb"]

@@ -5,7 +5,6 @@ from django.template import Library
 from ..thumbnail import ThumbnailSet
 from ..utils import parse_source
 
-
 VALID_IMAGE_FILE_EXTENSIONS = ('jpg', 'jpeg', 'png', 'gif', 'ico')
 
 register = Library()
@@ -21,7 +20,7 @@ def ultimatethumb(
     crop=None,
     retina=True,
     quality=None,
-    pngquant=None
+    pngquant=None,
 ):
     """
     Main template tag to generate thumbnail sourcesets.

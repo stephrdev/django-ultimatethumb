@@ -1,7 +1,6 @@
 import os
 import tempfile
 
-
 DEBUG = True
 
 SECRET_KEY = 'testing'
@@ -17,16 +16,17 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
-
     'ultimatethumb',
     'tests.resources.mockapp',
 ]
 
-TEMPLATES = [{
-    'BACKEND': 'django.template.backends.django.DjangoTemplates',
-    'APP_DIRS': True,
-    'DIRS': [os.path.join(os.path.dirname(__file__), 'templates')]
-}]
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
+        'DIRS': [os.path.join(os.path.dirname(__file__), 'templates')],
+    }
+]
 
 
 MEDIA_ROOT = tempfile.mkdtemp()

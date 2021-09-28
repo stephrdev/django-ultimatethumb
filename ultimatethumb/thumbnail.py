@@ -9,9 +9,14 @@ from django.utils.functional import cached_property
 from .commands import GraphicsmagickCommand, PngquantCommand
 from .storage import thumbnail_storage
 from .utils import (
-    MoveableNamedTemporaryFile, build_url, factor_size, get_size_for_path, get_thumb_data,
-    get_thumb_name, parse_sizes)
-
+    MoveableNamedTemporaryFile,
+    build_url,
+    factor_size,
+    get_size_for_path,
+    get_thumb_data,
+    get_thumb_name,
+    parse_sizes,
+)
 
 CROP_GRAVITY = {
     True: 'Center',
@@ -101,12 +106,18 @@ class ThumbnailSet(object):
                         if thumb_size[0] >= source_size[0]:
                             factor = float(source_size[0]) / thumb_size[0]
                             size[0] = str(source_size[0])
-                            size[1] = str(int(round(
-                                thumb_size[1] * factor))) if thumb_size[1] else '0'
+                            size[1] = (
+                                str(int(round(thumb_size[1] * factor)))
+                                if thumb_size[1]
+                                else '0'
+                            )
                         else:
                             factor = float(source_size[1]) / thumb_size[1]
-                            size[0] = str(int(round(
-                                thumb_size[0] * factor))) if thumb_size[0] else '0'
+                            size[0] = (
+                                str(int(round(thumb_size[0] * factor)))
+                                if thumb_size[0]
+                                else '0'
+                            )
                             size[1] = str(source_size[1])
 
                     oversize = True
@@ -128,6 +139,7 @@ class Thumbnail(object):
     """
     This object represents a single thumbnail.
     """
+
     def __init__(self, source, opts):
         """
         Given a source and options, this method initializes the Thumbnail object.
@@ -150,7 +162,7 @@ class Thumbnail(object):
     def __repr__(self):
         return '<Thumbnail: {0} {1}>'.format(
             self.source,
-            ' '.join(['{0}={1}'.format(k, self.options[k]) for k in sorted(self.options)])
+            ' '.join(['{0}={1}'.format(k, self.options[k]) for k in sorted(self.options)]),
         )
 
     @classmethod
@@ -166,11 +178,14 @@ class Thumbnail(object):
         """
         Generate the thumbnail name for the current thumbnail configuration.
         """
-        return get_thumb_name(self.source, **dict(
-            (option, value)
-            for option, value in self.options.items()
-            if option not in ('viewport',)
-        ))
+        return get_thumb_name(
+            self.source,
+            **dict(
+                (option, value)
+                for option, value in self.options.items()
+                if option not in ('viewport',)
+            )
+        )
 
     @cached_property
     def size(self):
@@ -193,7 +208,7 @@ class Thumbnail(object):
 
         return Size(
             int(viewport[0]) if viewport[0] != '0' else None,
-            int(viewport[1]) if viewport[1] != '0' else None
+            int(viewport[1]) if viewport[1] != '0' else None,
         )
 
     @property
@@ -215,10 +230,7 @@ class Thumbnail(object):
         """
         Returns the base64 representation of the thumbnail to use in a src attribute.
         """
-        return 'data:{0};base64,{1}'.format(
-            self.get_mimetype(),
-            self.get_base64_content()
-        )
+        return 'data:{0};base64,{1}'.format(self.get_mimetype(), self.get_base64_content())
 
     @property
     def requested_size(self):
@@ -334,13 +346,14 @@ class Thumbnail(object):
         resizer = GraphicsmagickCommand(
             infile=self.source,
             outfile=tmpfile.temporary_file_path(),
-            options=self.get_gm_options(factor)
+            options=self.get_gm_options(factor),
         )
         assert resizer.execute(fail_silently=True)
 
         if self.options['pngquant'] and os.path.splitext(thumb_name)[1] == '.png':
             optimizer = PngquantCommand(
-                pngfile=tmpfile.temporary_file_path(), quality=self.options['pngquant'])
+                pngfile=tmpfile.temporary_file_path(), quality=self.options['pngquant']
+            )
             assert optimizer.execute()
 
         thumbnail_storage.save(thumb_name, tmpfile)
@@ -369,17 +382,14 @@ class Thumbnail(object):
                 resize_attrs = '>'
 
         gm_options['resize'] = '{0}x{1}{2}'.format(
-            factor_size(size[0], factor),
-            factor_size(size[1], factor),
-            resize_attrs
+            factor_size(size[0], factor), factor_size(size[1], factor), resize_attrs
         )
 
         crop = CROP_GRAVITY.get(self.options['crop'], False)
         if crop:
             gm_options['gravity'] = crop
             gm_options['crop'] = '{0}x{1}+0+0'.format(
-                factor_size(size[0], factor),
-                factor_size(size[1], factor)
+                factor_size(size[0], factor), factor_size(size[1], factor)
             )
 
         gm_options['quality'] = self.options['quality']
