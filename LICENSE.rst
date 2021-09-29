@@ -1,4 +1,4 @@
-Copyright 2016-present, Moccu GmbH & Co. KG
+Copyright 2016-present, Stephan Jaekel
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,

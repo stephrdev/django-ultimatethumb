@@ -12,7 +12,7 @@ class TestUltimatethumbTags:
     def test_no_source(self, settings):
         settings.DEBUG = True
         template = Template(
-            ('{%% load ultimatethumb_tags %%}' '{%% ultimatethumb "img" "%s" sizes="100x0" %%}')
+            ('{%% load ultimatethumb_tags %%}{%% ultimatethumb "img" "%s" sizes="100x0" %%}')
             % 'static:notexist.file'
         )
 
@@ -24,7 +24,7 @@ class TestUltimatethumbTags:
     def test_invalid_source(self, settings):
         settings.DEBUG = True
         template = Template(
-            ('{%% load ultimatethumb_tags %%}' '{%% ultimatethumb "img" "%s" sizes="100x0" %%}')
+            ('{%% load ultimatethumb_tags %%}{%% ultimatethumb "img" "%s" sizes="100x0" %%}')
             % 'static:test.txt'
         )
 
@@ -36,7 +36,7 @@ class TestUltimatethumbTags:
     def test_static_source(self, settings):
         settings.DEBUG = True
         template = Template(
-            ('{%% load ultimatethumb_tags %%}' '{%% ultimatethumb "img" "%s" sizes="100x0" %%}')
+            ('{%% load ultimatethumb_tags %%}{%% ultimatethumb "img" "%s" sizes="100x0" %%}')
             % 'static:50x50-placeholder.png'
         )
 
@@ -55,7 +55,7 @@ class TestUltimatethumbTags:
         management.call_command('collectstatic', '--noinput')
 
         template = Template(
-            ('{%% load ultimatethumb_tags %%}' '{%% ultimatethumb "img" "%s" sizes="100x0" %%}')
+            ('{%% load ultimatethumb_tags %%}{%% ultimatethumb "img" "%s" sizes="100x0" %%}')
             % 'static:50x50-placeholder.png'
         )
 
@@ -70,7 +70,7 @@ class TestUltimatethumbTags:
         source = ImageModelFactory.create()
 
         template = Template(
-            ('{%% load ultimatethumb_tags %%}' '{%% ultimatethumb "img" "%s" sizes="100x0" %%}')
+            ('{%% load ultimatethumb_tags %%}{%% ultimatethumb "img" "%s" sizes="100x0" %%}')
             % source.file.path
         )
 
@@ -83,7 +83,7 @@ class TestUltimatethumbTags:
         source = ImageModelFactory.create()
 
         template = Template(
-            ('{%% load ultimatethumb_tags %%}' '{%% ultimatethumb "img" "%s" sizes="100x0" %%}')
+            ('{%% load ultimatethumb_tags %%}{%% ultimatethumb "img" "%s" sizes="100x0" %%}')
             % source.file.name
         )
 

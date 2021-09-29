@@ -28,7 +28,7 @@ extensions = [
 def linkcode_resolve(domain, info):
     """Link source code to GitHub."""
     project = 'django-ultimatethumb'
-    github_user = 'moccu'
+    github_user = 'stephrdev'
     head = 'master'
 
     if domain != 'py' or not info['module']:
@@ -63,7 +63,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 project = 'django-ultimatethumb'
-copyright = '%s, Moccu GmbH & Co. KG' % year
+copyright = '%s, Stephan Jaekel' % year
 
 exclude_patterns = ['_build']
 

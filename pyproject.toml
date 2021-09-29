@@ -3,12 +3,12 @@ name = "django-ultimatethumb"
 version = "1.2.0"
 description = "Generate thumbnails of anything."
 authors = [
-	"Moccu GmbH & Co. KG <info@moccu.com>",
+	"Stephan Jaekel <steph@rdev.info>"
 ]
 license = "BSD-3-Clause"
 readme = "README.rst"
-homepage = "https://github.com/moccu/django-ultimatethumb"
-repository = "https://github.com/moccu/django-ultimatethumb"
+homepage = "https://github.com/stephrdev/django-ultimatethumb"
+repository = "https://github.com/stephrdev/django-ultimatethumb"
 classifiers = [
 	"Development Status :: 4 - Beta",
 	"Environment :: Web Environment",

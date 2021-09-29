@@ -4,7 +4,7 @@ import tempfile
 import pytest
 
 
-@pytest.fixture()
+@pytest.fixture
 def media(request, settings):
     tmpdir = tempfile.mkdtemp()
     settings.MEDIA_ROOT = tmpdir
