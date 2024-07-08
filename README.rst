@@ -32,7 +32,7 @@ has some advantages:
 Requirements
 ------------
 
-django-ultimatethumb supports Python 3 only and requires at least Django 1.11.
+django-ultimatethumb supports Python 3 only and requires at least Django 2.2.
 
 
 Prepare for development
