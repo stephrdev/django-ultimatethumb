@@ -6,8 +6,8 @@ clean:
 	poetry run make -C docs clean
 
 correct:
-	poetry run isort static_templates tests
-	poetry run black -q static_templates tests
+	poetry run isort ultimatethumb tests
+	poetry run black -q ultimatethumb tests
 
 docs:
 	poetry run make -C docs html

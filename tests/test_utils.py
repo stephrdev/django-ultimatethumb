@@ -21,6 +21,7 @@ def test_get_cache_key():
 
 
 class TestGetThumbName:
+    @pytest.fixture(autouse=True)
     def setup(self):
         cache.clear()
 
@@ -58,6 +59,7 @@ class TestGetThumbName:
 
 
 class TestGetThumbData:
+    @pytest.fixture(autouse=True)
     def setup(self):
         cache.clear()
 

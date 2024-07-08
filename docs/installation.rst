@@ -25,7 +25,7 @@ Next, add the `django-ultimatethumb` urls to your ``urls.py``
 
     urlpatterns += patterns(
         '',
-        url(
+        re_path(
             r'^{0}/'.format(settings.ULTIMATETHUMB_URL.strip('/')),
             include('ultimatethumb.urls')
         ),

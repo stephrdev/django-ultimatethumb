@@ -8,6 +8,7 @@ from ultimatethumb.thumbnail import Thumbnail
 
 @pytest.mark.django_db
 class TestThumbnailView:
+    @pytest.fixture(autouse=True)
     def setup(self):
         self.image = ImageModelFactory.create()
         self.thumbnail = Thumbnail(self.image.file.path, {'size': [50, 50]})

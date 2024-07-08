@@ -11,6 +11,7 @@ from ultimatethumb.thumbnail import Size, Thumbnail
 
 @pytest.mark.django_db
 class TestThumbnail:
+    @pytest.fixture(autouse=True)
     def setup(self):
         cache.clear()
 

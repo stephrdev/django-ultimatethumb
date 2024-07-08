@@ -60,7 +60,6 @@ class ThumbnailView(View):
         if not was_modified_since(
             self.request.META.get('HTTP_IF_MODIFIED_SINCE'),
             thumbnail_stat.st_mtime,
-            thumbnail_stat.st_size,
         ):
             return HttpResponseNotModified()
 
