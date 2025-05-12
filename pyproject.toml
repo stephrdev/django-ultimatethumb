@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-ultimatethumb"
-version = "1.3.0"
+version = "1.4.0"
 description = "Generate thumbnails of anything."
 authors = [
 	"Stephan Jaekel <steph@rdev.info>"

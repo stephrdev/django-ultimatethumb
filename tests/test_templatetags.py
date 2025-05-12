@@ -1,5 +1,6 @@
 import os
 
+import django
 import pytest
 from django.core import management
 from django.template import Context, Template
@@ -49,9 +50,15 @@ class TestUltimatethumbTags:
 
     def test_static_hashed_source(self, settings):
         settings.INSTALLED_APPS += ('django.contrib.staticfiles',)
-        settings.STATICFILES_STORAGE = (
-            'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
-        )
+        if django.VERSION[:2] >= (4, 2):
+            settings.STORAGES["staticfiles"] = {
+                "BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage",
+            }
+        else:
+            settings.STATICFILES_STORAGE = (
+                'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+            )
+
         management.call_command('collectstatic', '--noinput')
 
         template = Template(

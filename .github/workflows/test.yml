@@ -25,7 +25,7 @@ jobs:
           set -xe
           sudo apt-get install -y graphicsmagick libjpeg-dev
           python -m pip install --upgrade pip setuptools
-          python -m pip install --upgrade poetry tox tox-gh-actions coverage
+          python -m pip install --upgrade poetry poetry-plugin-export tox tox-gh-actions coverage
       - name: "Run tox targets for ${{ matrix.python-version }}"
         run: "python -m tox"
       - name: "Upload coverage to Codecov"

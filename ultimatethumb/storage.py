@@ -1,7 +1,8 @@
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
-from django.core.files.storage import FileSystemStorage, get_storage_class
+from django.core.files.storage import FileSystemStorage
 from django.utils.functional import LazyObject
+from django.utils.module_loading import import_string
 
 from .utils import get_domain_url
 
@@ -38,7 +39,7 @@ class ThumbnailStorage(LazyObject):
     """
 
     def _setup(self):
-        self._wrapped = get_storage_class(
+        self._wrapped = import_string(
             getattr(
                 settings,
                 'ULTIMATETHUMB_STORAGE',
